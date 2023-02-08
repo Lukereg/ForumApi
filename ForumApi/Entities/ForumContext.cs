@@ -35,6 +35,20 @@ namespace ForumApi.Entities
                 .HasColumnName("created_date")
                 .HasDefaultValueSql("getutcdate()");
 
+                entity.HasMany(p => p.Comments)
+                .WithOne(c => c.Post)
+                .HasForeignKey(c => c.PostId);
+
+                entity.HasOne(p => p.Author)
+                .WithMany(u => u.Posts)
+                .HasForeignKey(p => p.AuthorId);
+
+                entity.HasOne(p => p.Category)
+                .WithMany(c => c.Posts)
+                .HasForeignKey(p => p.CategoryId);
+
+                entity.HasMany(p => p.Tags)
+                .WithMany(t => t.Posts);
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -69,6 +83,10 @@ namespace ForumApi.Entities
                 entity.Property(c => c.UpdatedDate)
                 .HasColumnName("updated_date")
                 .ValueGeneratedOnUpdate();
+
+                entity.HasOne(c => c.Author)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.AuthorId);
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -121,6 +139,9 @@ namespace ForumApi.Entities
                 entity.Property(u => u.Surname)
                 .HasColumnName("surname")
                 .HasMaxLength(60);
+
+                entity.HasMany(u => u.Roles)
+                .WithMany(r => r.Users);
             });
 
         }

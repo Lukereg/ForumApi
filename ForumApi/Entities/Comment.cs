@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ForumApi.Entities
@@ -9,5 +10,10 @@ namespace ForumApi.Entities
         public string Message { get; set; } = null!;
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+
+        public Post Post { get; set; } = null!;
+        public int PostId { get; set; }
+        public User Author { get; set; } = null!;
+        public int AuthorId { get; set; }
     }
 }
