@@ -101,6 +101,8 @@ namespace ForumApi.Entities
                 entity.Property(r => r.Name)
                 .HasColumnName("name")
                 .HasColumnType("varchar(50)");
+
+                entity.HasData(new Role() { Name = "Admin" }, new Role() { Name = "User" }, new Role() { Name = "Moderator" });
             });
 
             modelBuilder.Entity<Tag>(entity =>
