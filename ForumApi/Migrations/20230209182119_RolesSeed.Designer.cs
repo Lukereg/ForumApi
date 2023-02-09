@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ForumApi.Migrations
 {
-    [DbContext(typeof(ForumContext))]
+    [DbContext(typeof(ForumDbContext))]
     [Migration("20230209182119_RolesSeed")]
     partial class RolesSeed
     {

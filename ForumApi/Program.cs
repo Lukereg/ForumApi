@@ -1,5 +1,7 @@
 using ForumApi.Entities;
+using ForumApi.Services.CategoryService;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +13,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddDbContext<ForumContext>(
+builder.Services.AddDbContext<ForumDbContext>(
         option => option.UseMySql(builder.Configuration.GetConnectionString("ForumConnectionString"), 
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ForumConnectionString")))
     );
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 

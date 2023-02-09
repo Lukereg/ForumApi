@@ -2,9 +2,9 @@
 
 namespace ForumApi.Entities
 {
-    public class ForumContext : DbContext
+    public class ForumDbContext : DbContext
     {
-        public ForumContext(DbContextOptions<ForumContext> options) :base(options)
+        public ForumDbContext(DbContextOptions<ForumDbContext> options) :base(options)
         {
         }
 
