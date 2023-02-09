@@ -33,7 +33,7 @@ namespace ForumApi.Entities
 
                 entity.Property(p => p.CreatedDate)
                 .HasColumnName("created_date")
-                .HasDefaultValueSql("getutcdate()");
+                .ValueGeneratedOnAdd();
 
                 entity.HasMany(p => p.Comments)
                 .WithOne(c => c.Post)
@@ -41,7 +41,8 @@ namespace ForumApi.Entities
 
                 entity.HasOne(p => p.Author)
                 .WithMany(u => u.Posts)
-                .HasForeignKey(p => p.AuthorId);
+                .HasForeignKey(p => p.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
 
                 entity.HasOne(p => p.Category)
                 .WithMany(c => c.Posts)
@@ -78,7 +79,7 @@ namespace ForumApi.Entities
 
                 entity.Property(c => c.CreatedDate)
                 .HasColumnName("created_date")
-                .HasDefaultValueSql("getutcdate()");
+                .ValueGeneratedOnAdd();
 
                 entity.Property(c => c.UpdatedDate)
                 .HasColumnName("updated_date")
@@ -86,7 +87,8 @@ namespace ForumApi.Entities
 
                 entity.HasOne(c => c.Author)
                 .WithMany(u => u.Comments)
-                .HasForeignKey(c => c.AuthorId);
+                .HasForeignKey(c => c.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Role>(entity =>

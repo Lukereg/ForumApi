@@ -12,7 +12,8 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<ForumContext>(
-        option => option.UseSqlServer(builder.Configuration.GetConnectionString("ForumConnectionString"))
+        option => option.UseMySql(builder.Configuration.GetConnectionString("ForumConnectionString"), 
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ForumConnectionString")))
     );
 
 var app = builder.Build();
