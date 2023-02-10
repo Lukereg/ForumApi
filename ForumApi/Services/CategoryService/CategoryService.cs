@@ -43,5 +43,17 @@ namespace ForumApi.Services.CategoryService
             var result = _mapper.Map<List<GetCategoryDto>>(categories);
             return result;
         }
+
+        public async Task UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
+        {
+            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+            
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
+            category.Name = updateCategoryDto.Name;
+
+            await _forumDbContext.SaveChangesAsync();
+        }
     }
 }

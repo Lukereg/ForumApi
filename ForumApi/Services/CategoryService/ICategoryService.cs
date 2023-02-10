@@ -7,5 +7,6 @@ namespace ForumApi.Services.CategoryService
         public Task<int> AddCategory(AddCategoryDto addCategoryDto);
         public Task<GetCategoryDto> GetCategoryById(int id);
         public Task<IEnumerable<GetCategoryDto>> GetAllCategories();
+        public Task UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId);
     }
 }

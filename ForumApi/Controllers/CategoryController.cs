@@ -40,5 +40,13 @@ namespace ForumApi.Controllers
             var categories = await _categoryService.GetAllCategories();
             return Ok(categories);
         }
+
+        [AllowAnonymous]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCategory([FromBody] UpdateCategoryDto updateCategoryDto, [FromRoute] int id)
+        {
+            await _categoryService.UpdateCategory(updateCategoryDto, id);
+            return Ok();
+        }
     }
 }
