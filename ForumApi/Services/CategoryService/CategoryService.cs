@@ -36,5 +36,12 @@ namespace ForumApi.Services.CategoryService
             var result = _mapper.Map<GetCategoryDto>(category);
             return result;
         }
+
+        public async Task<IEnumerable<GetCategoryDto>> GetAllCategories()
+        {
+            var categories = await _forumDbContext.Categories.ToListAsync();
+            var result = _mapper.Map<List<GetCategoryDto>>(categories);
+            return result;
+        }
     }
 }

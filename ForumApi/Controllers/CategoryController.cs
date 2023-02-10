@@ -32,5 +32,13 @@ namespace ForumApi.Controllers
             var category = await _categoryService.GetCategoryById(id);
             return Ok(category);
         }
+
+        [AllowAnonymous]
+        [HttpGet()]
+        public async Task<ActionResult<IEnumerable<GetCategoryDto>>> GetAllCategories()
+        {
+            var categories = await _categoryService.GetAllCategories();
+            return Ok(categories);
+        }
     }
 }
