@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
