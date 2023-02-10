@@ -9,6 +9,7 @@ namespace ForumApi.MapProfiles
         public CategoryMappingProfile()
         {
             CreateMap<AddCategoryDto, Category>();
+            CreateMap<Category, GetCategoryDto>();
         }
     }
 }

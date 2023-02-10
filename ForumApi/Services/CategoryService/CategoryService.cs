@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ForumApi.Entities;
+using ForumApi.Exceptions;
 using ForumApi.Models.Categories;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.CategoryService
 {
@@ -24,5 +26,15 @@ namespace ForumApi.Services.CategoryService
             return category.Id;
         }
 
+        public async Task<GetCategoryDto> GetCategoryById(int id)
+        {
+            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
+            var result = _mapper.Map<GetCategoryDto>(category);
+            return result;
+        }
     }
 }

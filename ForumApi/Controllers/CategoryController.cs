@@ -14,7 +14,7 @@ namespace ForumApi.Controllers
 
         public CategoryController(ICategoryService categoryService)
         {
-            this._categoryService = categoryService;
+            _categoryService = categoryService;
         }
 
         [AllowAnonymous]
@@ -23,6 +23,14 @@ namespace ForumApi.Controllers
         {
             var id = await _categoryService.AddCategory(addCategoryDto);
             return Created($"/v1/categories/{id}", null);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCategoryById([FromRoute] int id)
+        {
+            var category = await _categoryService.GetCategoryById(id);
+            return Ok(category);
         }
     }
 }
