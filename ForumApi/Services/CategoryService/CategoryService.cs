@@ -55,5 +55,16 @@ namespace ForumApi.Services.CategoryService
 
             await _forumDbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteCategory(int id)
+        {
+            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
+            _forumDbContext.Remove(category);
+            await _forumDbContext.SaveChangesAsync();
+        }
     }
 }

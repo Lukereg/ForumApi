@@ -48,5 +48,13 @@ namespace ForumApi.Controllers
             await _categoryService.UpdateCategory(updateCategoryDto, id);
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCategory([FromRoute] int id)
+        {
+            await _categoryService.DeleteCategory(id);
+            return NoContent();
+        }
     }
 }
