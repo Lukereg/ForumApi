@@ -1,9 +1,15 @@
 using ForumApi.Entities;
+using ForumApi.Middleware;
 using ForumApi.Services.CategoryService;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// NLog: Setup NLog for Dependency injection
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 // Add services to the container.
 
@@ -19,6 +25,7 @@ builder.Services.AddDbContext<ForumDbContext>(
     );
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
@@ -29,6 +36,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
