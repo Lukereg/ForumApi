@@ -15,11 +15,13 @@ namespace ForumApi.Services.CategoryService
             _mapper = mapper;
         }
 
-        public async Task AddCategory(AddCategoryDto addCategoryDto)
+        public async Task<int> AddCategory(AddCategoryDto addCategoryDto)
         {
             var category = _mapper.Map<Category>(addCategoryDto);
             _forumDbContext.Categories.Add(category);
             await _forumDbContext.SaveChangesAsync();
+
+            return category.Id;
         }
 
     }

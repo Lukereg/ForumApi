@@ -10,19 +10,19 @@ namespace ForumApi.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService categoryService;
+        private readonly ICategoryService _categoryService;
 
         public CategoryController(ICategoryService categoryService)
         {
-            this.categoryService = categoryService;
+            this._categoryService = categoryService;
         }
 
         [AllowAnonymous]
         [HttpPost()]
         public async Task<ActionResult> AddCategory([FromBody] AddCategoryDto addCategoryDto)
         {
-            await categoryService.AddCategory(addCategoryDto);
-            return Ok();
+            var id = await _categoryService.AddCategory(addCategoryDto);
+            return Created($"/v1/categories/{id}", null);
         }
     }
 }

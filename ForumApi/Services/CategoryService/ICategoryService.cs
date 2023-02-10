@@ -4,6 +4,6 @@ namespace ForumApi.Services.CategoryService
 {
     public interface ICategoryService
     {
-        public Task AddCategory(AddCategoryDto addCategoryDto);
+        public Task<int> AddCategory(AddCategoryDto addCategoryDto);
     }
 }
