@@ -26,5 +26,13 @@ namespace ForumApi.Controllers
             var id = await _postService.AddPost(categoryId, addPostDto);
             return Created($"/v1/categories/{categoryId}/posts/{id}", null);
         }
+
+        [AllowAnonymous]
+        [HttpGet("{postId}")]
+        public async Task<ActionResult> GetPostById([FromRoute] int categoryId, [FromRoute] int postId)
+        {
+            var post = await _postService.GetPostById(categoryId, postId);
+            return Ok(post);
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ForumApi.Entities;
+using ForumApi.Exceptions;
 using ForumApi.Models.Posts;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.PostService
 {
@@ -24,6 +26,16 @@ namespace ForumApi.Services.PostService
             await _forumDbContext.SaveChangesAsync();
 
             return post.Id;
+        }
+
+        public async Task<GetPostDto> GetPostById(int categoryId, int postId)
+        {
+            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            if (post is null || post.CategoryId != categoryId)
+                throw new NotFoundException("Post not found");
+
+            var result = _mapper.Map<GetPostDto>(post);
+            return result;
         }
     }
 }
