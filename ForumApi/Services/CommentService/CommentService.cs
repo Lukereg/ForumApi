@@ -41,5 +41,18 @@ namespace ForumApi.Services.CommentService
 
             return result;
         }
+
+        public async Task UpdateComment(int categoryId, int postId, int commentId, UpdateCommentDto updateCommentDto)
+        {
+            var post = await _postService.GetPostEntityById(categoryId, postId);
+            var comment = await _forumDbContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
+            if (comment is null || comment.PostId != post.Id)
+                throw new NotFoundException("Comment not found");
+
+            comment.Message = updateCommentDto.Message;
+            comment.UpdatedDate = DateTime.Now;
+
+            _forumDbContext.SaveChanges();
+        }
     }
 }

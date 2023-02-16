@@ -6,5 +6,6 @@ namespace ForumApi.Services.CommentService
     {
         public Task<int> AddComment(int categoryId, int postId, AddCommentDto addCommentDto);
         public Task<IEnumerable<GetCommentDto>> GetComments(int categoryId, int postId);
+        public Task UpdateComment(int categoryId, int postId, int commentId, UpdateCommentDto updateCommentDto);
     }
 }

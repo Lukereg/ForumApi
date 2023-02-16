@@ -32,5 +32,13 @@ namespace ForumApi.Controllers
             var comments = await _commentService.GetComments(categoryId, postId);
             return Ok(comments);
         }
+
+        [AllowAnonymous]
+        [HttpPut("{commentId}")]
+        public async Task<ActionResult> UpdateComment([FromRoute] int categoryId, [FromRoute] int postId, int commentId, [FromBody] UpdateCommentDto updateCommentDto)
+        {
+            await _commentService.UpdateComment(categoryId, postId, commentId, updateCommentDto);
+            return Ok();
+        }
     }
 }
