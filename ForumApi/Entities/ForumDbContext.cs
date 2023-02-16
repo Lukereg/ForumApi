@@ -82,8 +82,7 @@ namespace ForumApi.Entities
                 .ValueGeneratedOnAdd();
 
                 entity.Property(c => c.UpdatedDate)
-                .HasColumnName("updated_date")
-                .ValueGeneratedOnUpdate();
+                .HasColumnName("updated_date");
 
                 entity.HasOne(c => c.Author)
                 .WithMany(u => u.Comments)
