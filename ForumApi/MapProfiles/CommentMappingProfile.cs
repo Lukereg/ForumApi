@@ -9,6 +9,7 @@ namespace ForumApi.MapProfiles
         public CommentMappingProfile()
         {
             CreateMap<AddCommentDto, Comment>();
+            CreateMap<Comment, GetCommentDto>();
         }
     }
 }

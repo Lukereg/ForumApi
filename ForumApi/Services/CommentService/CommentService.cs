@@ -32,5 +32,17 @@ namespace ForumApi.Services.CommentService
 
             return comment.Id;
         }
+
+        public async Task<IEnumerable<GetCommentDto>> GetComments(int categoryId, int postId)
+        {
+            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            if (post is null || post.CategoryId != categoryId)
+                throw new NotFoundException("Post not found");
+
+            var comments = await _forumDbContext.Comments.Where(c => c.PostId == post.Id).ToListAsync();
+            var result = _mapper.Map<List<GetCommentDto>>(comments);
+
+            return result;
+        }
     }
 }

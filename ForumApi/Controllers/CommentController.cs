@@ -24,5 +24,13 @@ namespace ForumApi.Controllers
             var id = await _commentService.AddComment(categoryId, postId, addCommentDto);
             return Created($"/v1/categories/{categoryId}/posts/{postId}/comments/{id}", null);
         }
+
+        [AllowAnonymous]
+        [HttpGet()]
+        public async Task<ActionResult> GetComments([FromRoute] int categoryId, [FromRoute] int postId)
+        {
+            var comments = await _commentService.GetComments(categoryId, postId);
+            return Ok(comments);
+        }
     }
 }
