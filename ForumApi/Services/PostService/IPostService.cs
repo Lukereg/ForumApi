@@ -7,5 +7,6 @@ namespace ForumApi.Services.PostService
         public Task<int> AddPost(int categoryId, AddPostDto addPostDto);
         public Task<GetPostDto> GetPostById(int categoryId, int postId);
         public Task<IEnumerable<GetPostDto>> GetPosts(int categoryId);
+        public Task<IEnumerable<GetPostDto>> GetPostsByAuthor(int authorId);
     }
 }

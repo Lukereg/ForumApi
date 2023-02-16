@@ -44,5 +44,12 @@ namespace ForumApi.Services.PostService
             var result = _mapper.Map<List<GetPostDto>>(posts);
             return result;
         }
+
+        public async Task<IEnumerable<GetPostDto>> GetPostsByAuthor(int authorId)
+        {
+            var posts = await _forumDbContext.Posts.Where(p => p.AuthorId == authorId).ToListAsync();
+            var result = _mapper.Map<List<GetPostDto>>(posts);
+            return result;
+        }
     }
 }

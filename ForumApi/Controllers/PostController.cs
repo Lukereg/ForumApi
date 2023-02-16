@@ -42,5 +42,14 @@ namespace ForumApi.Controllers
             var posts = await _postService.GetPosts(categoryId);
             return Ok(posts);
         }
+
+        [AllowAnonymous]
+        [HttpGet("~/v1/authors/{authorId}/posts")]
+        public async Task<ActionResult> GetPostsByAuthor([FromRoute] int authorId)
+        {
+            var posts = await _postService.GetPostsByAuthor(authorId);
+            return Ok(posts);
+        }
+
     }
 }
