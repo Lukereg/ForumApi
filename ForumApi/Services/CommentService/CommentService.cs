@@ -52,7 +52,7 @@ namespace ForumApi.Services.CommentService
             comment.Message = updateCommentDto.Message;
             comment.UpdatedDate = DateTime.Now;
 
-            _forumDbContext.SaveChanges();
+            await _forumDbContext.SaveChangesAsync();
         }
     }
 }
