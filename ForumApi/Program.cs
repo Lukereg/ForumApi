@@ -2,6 +2,7 @@ using ForumApi.Entities;
 using ForumApi.Middleware;
 using ForumApi.Services.AccountService;
 using ForumApi.Services.CategoryService;
+using ForumApi.Services.CommentService;
 using ForumApi.Services.PostService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 var app = builder.Build();
 
