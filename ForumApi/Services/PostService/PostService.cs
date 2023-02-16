@@ -30,10 +30,7 @@ namespace ForumApi.Services.PostService
 
         public async Task<GetPostDto> GetPostById(int categoryId, int postId)
         {
-            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
-            if (post is null || post.CategoryId != categoryId)
-                throw new NotFoundException("Post not found");
-
+            var post = await GetPostEntityById(categoryId, postId);
             var result = _mapper.Map<GetPostDto>(post);
             return result;
         }
@@ -51,5 +48,15 @@ namespace ForumApi.Services.PostService
             var result = _mapper.Map<List<GetPostDto>>(posts);
             return result;
         }
+
+        public async Task<Post> GetPostEntityById(int categoryId, int postId)
+        {
+            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            if (post is null || post.CategoryId != categoryId)
+                throw new NotFoundException("Post not found");
+
+            return post;
+        }
+
     }
 }

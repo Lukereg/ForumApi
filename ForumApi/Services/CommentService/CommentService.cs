@@ -11,18 +11,18 @@ namespace ForumApi.Services.CommentService
     {
         private readonly ForumDbContext _forumDbContext;
         private readonly IMapper _mapper;
+        private readonly IPostService _postService;
 
-        public CommentService(ForumDbContext forumDbContext, IMapper mapper)
+        public CommentService(ForumDbContext forumDbContext, IMapper mapper, IPostService postService)
         {
             _forumDbContext = forumDbContext;
             _mapper = mapper;
+            _postService = postService; 
         }
 
         public async Task<int> AddComment(int categoryId, int postId, AddCommentDto addCommentDto)
         {
-            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
-            if (post is null || post.CategoryId != categoryId)
-                throw new NotFoundException("Post not found");
+            var post = await _postService.GetPostEntityById(categoryId, postId);
 
             var comment = _mapper.Map<Comment>(addCommentDto);
             comment.PostId = post.Id;
@@ -35,10 +35,7 @@ namespace ForumApi.Services.CommentService
 
         public async Task<IEnumerable<GetCommentDto>> GetComments(int categoryId, int postId)
         {
-            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
-            if (post is null || post.CategoryId != categoryId)
-                throw new NotFoundException("Post not found");
-
+            var post = await _postService.GetPostEntityById(categoryId, postId);
             var comments = await _forumDbContext.Comments.Where(c => c.PostId == post.Id).ToListAsync();
             var result = _mapper.Map<List<GetCommentDto>>(comments);
 
