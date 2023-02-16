@@ -33,6 +33,17 @@ namespace ForumApi.Services.CommentService
             return comment.Id;
         }
 
+        public async Task DeleteComment(int categoryId, int postId, int commentId)
+        {
+            var post = await _postService.GetPostEntityById(categoryId, postId);
+            var comment = await _forumDbContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
+            if (comment is null || comment.PostId != post.Id)
+                throw new NotFoundException("Comment not found");
+            
+            _forumDbContext.Comments.Remove(comment);
+            await _forumDbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<GetCommentDto>> GetComments(int categoryId, int postId)
         {
             var post = await _postService.GetPostEntityById(categoryId, postId);

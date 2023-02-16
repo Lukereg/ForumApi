@@ -35,10 +35,18 @@ namespace ForumApi.Controllers
 
         [AllowAnonymous]
         [HttpPut("{commentId}")]
-        public async Task<ActionResult> UpdateComment([FromRoute] int categoryId, [FromRoute] int postId, int commentId, [FromBody] UpdateCommentDto updateCommentDto)
+        public async Task<ActionResult> UpdateComment([FromRoute] int categoryId, [FromRoute] int postId, [FromRoute] int commentId, [FromBody] UpdateCommentDto updateCommentDto)
         {
             await _commentService.UpdateComment(categoryId, postId, commentId, updateCommentDto);
             return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("{commentId}")]
+        public async Task<ActionResult> DeleteComment([FromRoute] int categoryId, [FromRoute] int postId, [FromRoute] int commentId)
+        {
+            await _commentService.DeleteComment(categoryId, postId, commentId);
+            return NoContent();
         }
     }
 }
