@@ -63,7 +63,7 @@ namespace ForumApi.Services.CategoryService
             if (category is null)
                 throw new NotFoundException("Category not found");
 
-            _forumDbContext.Remove(category);
+            _forumDbContext.Categories.Remove(category);
             await _forumDbContext.SaveChangesAsync();
         }
     }
