@@ -27,5 +27,12 @@ namespace ForumApi.Services.TagService
             await _forumDbContext.SaveChangesAsync();
             return newTag.Id;
         }
+
+        public async Task<IEnumerable<GetTagDto>> GetAllTags()
+        {
+            var tags = await _forumDbContext.Tags.ToListAsync();
+            var result = _mapper.Map<List<GetTagDto>>(tags);
+            return result;
+        }
     }
 }

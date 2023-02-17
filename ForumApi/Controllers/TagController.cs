@@ -24,5 +24,13 @@ namespace ForumApi.Controllers
             var id = await _tagService.AddTag(addTagDto);
             return Created($"/v1/tags/{id}", null);
         }
+
+        [AllowAnonymous]
+        [HttpGet()]
+        public async Task<ActionResult> GetAllTags()
+        {
+            var tags = await _tagService.GetAllTags();
+            return Ok(tags);
+        }
     }
 }

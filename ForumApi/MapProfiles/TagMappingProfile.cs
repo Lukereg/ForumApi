@@ -9,6 +9,7 @@ namespace ForumApi.MapProfiles
         public TagMappingProfile()
         {
             CreateMap<AddTagDto, Tag>();
+            CreateMap<Tag, GetTagDto>();
         }
     }
 }
