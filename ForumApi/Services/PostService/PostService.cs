@@ -49,6 +49,13 @@ namespace ForumApi.Services.PostService
             return result;
         }
 
+        public async Task DeletePost(int categoryId, int postId)
+        {
+            var post = await GetPostEntityById(categoryId, postId);
+            _forumDbContext.Posts.Remove(post);
+            await _forumDbContext.SaveChangesAsync();
+        }
+
         public async Task<Post> GetPostEntityById(int categoryId, int postId)
         {
             var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
@@ -57,6 +64,5 @@ namespace ForumApi.Services.PostService
 
             return post;
         }
-
     }
 }

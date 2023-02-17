@@ -28,6 +28,14 @@ namespace ForumApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet()]
+        public async Task<ActionResult> GetPosts([FromRoute] int categoryId)
+        {
+            var posts = await _postService.GetPosts(categoryId);
+            return Ok(posts);
+        }
+
+        [AllowAnonymous]
         [HttpGet("{postId}")]
         public async Task<ActionResult> GetPostById([FromRoute] int categoryId, [FromRoute] int postId)
         {
@@ -36,11 +44,11 @@ namespace ForumApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet()]
-        public async Task<ActionResult> GetPosts([FromRoute] int categoryId)
+        [HttpDelete("{postId}")]
+        public async Task<ActionResult> DeletePost([FromRoute] int categoryId, [FromRoute] int postId)
         {
-            var posts = await _postService.GetPosts(categoryId);
-            return Ok(posts);
+            await _postService.DeletePost(categoryId, postId);
+            return NoContent();
         }
 
         [AllowAnonymous]
@@ -50,6 +58,8 @@ namespace ForumApi.Controllers
             var posts = await _postService.GetPostsByAuthor(authorId);
             return Ok(posts);
         }
+
+        
 
     }
 }
