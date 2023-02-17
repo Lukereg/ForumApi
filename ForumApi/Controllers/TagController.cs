@@ -1,0 +1,28 @@
+﻿using ForumApi.Models.Tags;
+using ForumApi.Services.TagService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ForumApi.Controllers
+{
+    [Route("v1/tags")]
+    [ApiController]
+    public class TagController : ControllerBase
+    {
+        private readonly ITagService _tagService;
+
+        public TagController(ITagService tagService)
+        {
+            _tagService = tagService;
+        }
+
+        [AllowAnonymous]
+        [HttpPost()]
+        public async Task<ActionResult> AddTag([FromBody] AddTagDto addTagDto)
+        {
+            var id = await _tagService.AddTag(addTagDto);
+            return Created($"/v1/tags/{id}", null);
+        }
+    }
+}
