@@ -34,5 +34,15 @@ namespace ForumApi.Services.TagService
             var result = _mapper.Map<List<GetTagDto>>(tags);
             return result;
         }
+
+        public async Task<GetTagDto> GetTagById(int id)
+        {
+            var tag = await _forumDbContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            if (tag is null)
+                throw new NotFoundException("Tag not found");
+
+            var result = _mapper.Map<GetTagDto>(tag);
+            return result;        
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace ForumApi.Services.TagService
     {
         public Task<int> AddTag(AddTagDto addTagDto);
         public Task<IEnumerable<GetTagDto>> GetAllTags();
+        public Task<GetTagDto> GetTagById(int id);
     }
 }

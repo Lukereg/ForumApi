@@ -32,5 +32,13 @@ namespace ForumApi.Controllers
             var tags = await _tagService.GetAllTags();
             return Ok(tags);
         }
+
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetTagById(int id)
+        {
+            var tag = await _tagService.GetTagById(id);
+            return Ok(tag);
+        }
     }
 }
