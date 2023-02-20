@@ -20,7 +20,7 @@ namespace ForumApi.Services.CategoryService
         public async Task<int> AddCategory(AddCategoryDto addCategoryDto)
         {
             var category = _mapper.Map<Category>(addCategoryDto);
-            _forumDbContext.Categories.Add(category);
+            await _forumDbContext.Categories.AddAsync(category);
             await _forumDbContext.SaveChangesAsync();
 
             return category.Id;
