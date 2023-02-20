@@ -63,6 +63,7 @@ namespace ForumApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedDate")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_date");
 
@@ -213,7 +214,7 @@ namespace ForumApi.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("PostTag");
+                    b.ToTable("PostTag", (string)null);
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -228,7 +229,7 @@ namespace ForumApi.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RoleUser");
+                    b.ToTable("RoleUser", (string)null);
                 });
 
             modelBuilder.Entity("ForumApi.Entities.Comment", b =>
