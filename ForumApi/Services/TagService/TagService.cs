@@ -30,14 +30,18 @@ namespace ForumApi.Services.TagService
 
         public async Task<IEnumerable<GetTagDto>> GetAllTags()
         {
-            var tags = await _forumDbContext.Tags.ToListAsync();
+            var tags = await _forumDbContext.Tags
+                .AsNoTracking()
+                .ToListAsync();
             var result = _mapper.Map<List<GetTagDto>>(tags);
             return result;
         }
 
         public async Task<GetTagDto> GetTagById(int id)
         {
-            var tag = await _forumDbContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            var tag = await _forumDbContext.Tags
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Id == id);
             if (tag is null)
                 throw new NotFoundException("Tag not found");
 

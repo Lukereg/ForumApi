@@ -47,7 +47,9 @@ namespace ForumApi.Services.CommentService
         public async Task<IEnumerable<GetCommentDto>> GetComments(int categoryId, int postId)
         {
             var post = await _postService.GetPostEntityById(categoryId, postId);
-            var comments = await _forumDbContext.Comments.Where(c => c.PostId == post.Id).ToListAsync();
+            var comments = await _forumDbContext.Comments.Where(c => c.PostId == post.Id)
+                .AsNoTracking()
+                .ToListAsync();
             var result = _mapper.Map<List<GetCommentDto>>(comments);
 
             return result;

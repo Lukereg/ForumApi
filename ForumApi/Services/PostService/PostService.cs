@@ -37,14 +37,18 @@ namespace ForumApi.Services.PostService
 
         public async Task<IEnumerable<GetPostDto>> GetPosts(int categoryId)
         {
-            var posts = await _forumDbContext.Posts.Where(p => p.CategoryId == categoryId).ToListAsync();
+            var posts = await _forumDbContext.Posts.Where(p => p.CategoryId == categoryId)
+                .AsNoTracking()
+                .ToListAsync();
             var result = _mapper.Map<List<GetPostDto>>(posts);
             return result;
         }
 
         public async Task<IEnumerable<GetPostDto>> GetPostsByAuthor(int authorId)
         {
-            var posts = await _forumDbContext.Posts.Where(p => p.AuthorId == authorId).ToListAsync();
+            var posts = await _forumDbContext.Posts.Where(p => p.AuthorId == authorId)
+                .AsNoTracking()
+                .ToListAsync();
             var result = _mapper.Map<List<GetPostDto>>(posts);
             return result;
         }

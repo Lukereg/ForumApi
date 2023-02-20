@@ -28,7 +28,9 @@ namespace ForumApi.Services.CategoryService
 
         public async Task<GetCategoryDto> GetCategoryById(int id)
         {
-            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            var category = await _forumDbContext.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (category is null)
                 throw new NotFoundException("Category not found");
@@ -39,7 +41,9 @@ namespace ForumApi.Services.CategoryService
 
         public async Task<IEnumerable<GetCategoryDto>> GetAllCategories()
         {
-            var categories = await _forumDbContext.Categories.ToListAsync();
+            var categories = await _forumDbContext.Categories
+                .AsNoTracking()
+                .ToListAsync();
             var result = _mapper.Map<List<GetCategoryDto>>(categories);
             return result;
         }
