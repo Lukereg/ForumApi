@@ -11,5 +11,6 @@ namespace ForumApi.Services.PostService
         public Task<IEnumerable<GetPostDto>> GetPostsByAuthor(int authorId);
         public Task<Post> GetPostEntityById (int categoryId, int postId);
         public Task DeletePost(int categoryId, int postId);
+        public Task <IEnumerable<GetPostDto>> GetPostsByTag(int tagId);
     }
 }

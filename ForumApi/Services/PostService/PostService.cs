@@ -70,6 +70,23 @@ namespace ForumApi.Services.PostService
             return post;
         }
 
+        public async Task<IEnumerable<GetPostDto>> GetPostsByTag(int tagId)
+        {
+            var tag = await _forumDbContext.Tags
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Id == tagId);
+
+            if (tag is null)
+                throw new NotFoundException("Tag not found");
+
+            var posts = await _forumDbContext.Posts.Where(p => p.Tags.Contains(tag))
+                .AsNoTracking()
+                .ToListAsync();
+
+            var result = _mapper.Map<List<GetPostDto>>(posts);
+            return result;
+        }
+
         private async Task<List<Tag>?> MatchTags(AddPostDto addPostDto)
         {
             if (addPostDto.TagsIds is null)
@@ -86,5 +103,7 @@ namespace ForumApi.Services.PostService
 
             return tags;
         }
+
+        
     }
 }

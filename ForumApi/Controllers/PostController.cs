@@ -59,6 +59,13 @@ namespace ForumApi.Controllers
             return Ok(posts);
         }
 
+        [AllowAnonymous]
+        [HttpGet("~/v1/tags/{tagId}/posts")]
+        public async Task<ActionResult> GetPostsByTag([FromRoute] int tagId)
+        {
+            var posts = await _postService.GetPostsByTag(tagId);
+            return Ok(posts);
+        }
         
 
     }
