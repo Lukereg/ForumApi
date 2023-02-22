@@ -35,10 +35,18 @@ namespace ForumApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetTagById(int id)
+        public async Task<ActionResult> GetTagById([FromRoute] int id)
         {
             var tag = await _tagService.GetTagById(id);
             return Ok(tag);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTag([FromRoute] int id)
+        {
+            await _tagService.DeleteTag(id);
+            return NoContent();
         }
     }
 }

@@ -28,6 +28,17 @@ namespace ForumApi.Services.TagService
             return newTag.Id;
         }
 
+        public async Task DeleteTag(int id)
+        {
+            var tag = await _forumDbContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tag is null)
+                throw new NotFoundException("Tag not found");
+
+            _forumDbContext.Tags.Remove(tag);
+            await _forumDbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<GetTagDto>> GetAllTags()
         {
             var tags = await _forumDbContext.Tags
