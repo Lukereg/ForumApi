@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ForumApi.Entities;
 using ForumApi.Exceptions;
+using ForumApi.Models.Categories;
 using ForumApi.Models.Tags;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +59,18 @@ namespace ForumApi.Services.TagService
 
             var result = _mapper.Map<GetTagDto>(tag);
             return result;        
+        }
+
+        public async Task UpdateTag(UpdateTagDto updateTagDto, int id)
+        {
+            var tag = await _forumDbContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tag is null)
+                throw new NotFoundException("Tag not found");
+
+            tag.Value = updateTagDto.Value;
+
+            await _forumDbContext.SaveChangesAsync();
         }
     }
 }

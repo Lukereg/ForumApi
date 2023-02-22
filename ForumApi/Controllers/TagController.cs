@@ -42,6 +42,14 @@ namespace ForumApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateTag([FromBody] UpdateTagDto updateTagDto, [FromRoute] int id)
+        {
+            await _tagService.UpdateTag(updateTagDto, id);
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTag([FromRoute] int id)
         {
