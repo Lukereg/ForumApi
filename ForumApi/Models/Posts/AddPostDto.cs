@@ -5,5 +5,6 @@
         public string Title { get; set; } = null!;
         public string Message { get; set; } = null!;
         public int AuthorId { get; set; }
+        public List<int>? TagsIds { get; set; }
     }
 }

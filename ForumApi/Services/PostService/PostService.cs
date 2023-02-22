@@ -21,6 +21,7 @@ namespace ForumApi.Services.PostService
         {
             var post = _mapper.Map<Post>(addPostDto);
             post.CategoryId = categoryId;
+            post.Tags = await MatchTags(addPostDto);
 
             await _forumDbContext.Posts.AddAsync(post);
             await _forumDbContext.SaveChangesAsync();
@@ -67,6 +68,23 @@ namespace ForumApi.Services.PostService
                 throw new NotFoundException("Post not found");
 
             return post;
+        }
+
+        private async Task<List<Tag>?> MatchTags(AddPostDto addPostDto)
+        {
+            if (addPostDto.TagsIds is null)
+                return null;
+
+            var tags = new List<Tag>();
+
+            foreach (var id in addPostDto.TagsIds)
+            {
+                var tag = await _forumDbContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
+                if (tag is not null)
+                    tags.Add(tag);
+            }
+
+            return tags;
         }
     }
 }
