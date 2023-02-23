@@ -26,5 +26,13 @@ namespace ForumApi.Controllers
             await _accountService.RegisterUser(registerUserDto);
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginUserDto loginUserDto)
+        {
+            string token = await _accountService.LoginUser(loginUserDto);
+            return Ok(token);
+        }
     }
 }
