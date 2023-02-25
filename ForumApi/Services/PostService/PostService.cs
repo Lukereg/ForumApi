@@ -48,15 +48,7 @@ namespace ForumApi.Services.PostService
                 .Where(post => post.CategoryId == categoryId)
                 .AsNoTracking();
 
-            var totalCount = posts.Count();
-
-            posts = Sort(posts, paginationQuery.SortBy, paginationQuery.SortDirection);
-
-            var postsList = await _paginationService.ItemsWithPagination(posts, paginationQuery);
-
-            var result = _mapper.Map<List<GetPostDto>>(postsList);
-
-            return new PagedResultDto<GetPostDto>(result, totalCount, paginationQuery.PageSize, paginationQuery.PageNumber);
+            return await SortAndPaginate(posts, paginationQuery);
         }
 
         public async Task<PagedResultDto<GetPostDto>> GetPostsByAuthor(int authorId, PaginationQuery paginationQuery)
@@ -65,15 +57,7 @@ namespace ForumApi.Services.PostService
                 .Where(p => p.AuthorId == authorId)
                 .AsNoTracking();
 
-            var totalCount = posts.Count();
-
-            posts = Sort(posts, paginationQuery.SortBy, paginationQuery.SortDirection);
-
-            var postsList = await _paginationService.ItemsWithPagination(posts, paginationQuery);
-
-            var result = _mapper.Map<List<GetPostDto>>(postsList);
-
-            return new PagedResultDto<GetPostDto>(result, totalCount, paginationQuery.PageSize, paginationQuery.PageNumber);
+            return await SortAndPaginate(posts, paginationQuery);
         }
 
         public async Task DeletePost(int categoryId, int postId)
@@ -104,15 +88,7 @@ namespace ForumApi.Services.PostService
             var posts = _forumDbContext.Posts.Where(p => p.Tags.Contains(tag))
                 .AsNoTracking();
 
-            var totalCount = posts.Count();
-
-            posts = Sort(posts, paginationQuery.SortBy, paginationQuery.SortDirection);
-
-            var postsList = await _paginationService.ItemsWithPagination(posts, paginationQuery);
-
-            var result = _mapper.Map<List<GetPostDto>>(postsList);
-
-            return new PagedResultDto<GetPostDto>(result, totalCount, paginationQuery.PageSize, paginationQuery.PageNumber);
+            return await SortAndPaginate(posts, paginationQuery);
         }
 
         private async Task<List<Tag>?> MatchTags(AddPostDto addPostDto)
@@ -130,6 +106,17 @@ namespace ForumApi.Services.PostService
             }
 
             return tags;
+        }
+
+        private async Task<PagedResultDto<GetPostDto>> SortAndPaginate(IQueryable<Post> posts, PaginationQuery paginationQuery)
+        {
+            posts = Sort(posts, paginationQuery.SortBy, paginationQuery.SortDirection);
+
+            var totalCount = posts.Count();
+            var postsList = await _paginationService.ItemsWithPagination(posts, paginationQuery);
+            var result = _mapper.Map<List<GetPostDto>>(postsList);
+
+            return new PagedResultDto<GetPostDto>(result, totalCount, paginationQuery.PageSize, paginationQuery.PageNumber);
         }
 
         private IQueryable<Post> Sort(IQueryable<Post> posts, string? sortBy, SortDirection? sortDirection)
