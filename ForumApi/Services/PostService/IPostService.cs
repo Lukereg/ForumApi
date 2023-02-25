@@ -1,5 +1,7 @@
 ﻿using ForumApi.Entities;
+using ForumApi.Models.Pagination;
 using ForumApi.Models.Posts;
+using ForumApi.Models.Queries;
 
 namespace ForumApi.Services.PostService
 {
@@ -7,10 +9,10 @@ namespace ForumApi.Services.PostService
     {
         public Task<int> AddPost(int categoryId, AddPostDto addPostDto);
         public Task<GetPostDto> GetPostById(int categoryId, int postId);
-        public Task<IEnumerable<GetPostDto>> GetPosts(int categoryId);
-        public Task<IEnumerable<GetPostDto>> GetPostsByAuthor(int authorId);
+        public Task<PagedResultDto<GetPostDto>> GetPosts(int categoryId, PaginationQuery paginationQuery);
+        public Task<PagedResultDto<GetPostDto>> GetPostsByAuthor(int authorId, PaginationQuery paginationQuery);
         public Task<Post> GetPostEntityById (int categoryId, int postId);
         public Task DeletePost(int categoryId, int postId);
-        public Task <IEnumerable<GetPostDto>> GetPostsByTag(int tagId);
+        public Task <PagedResultDto<GetPostDto>> GetPostsByTag(int tagId, PaginationQuery paginationQuery);
     }
 }

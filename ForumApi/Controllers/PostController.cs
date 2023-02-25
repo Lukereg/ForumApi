@@ -1,5 +1,6 @@
 ﻿using ForumApi.Models.Categories;
 using ForumApi.Models.Posts;
+using ForumApi.Models.Queries;
 using ForumApi.Services.CategoryService;
 using ForumApi.Services.PostService;
 using Microsoft.AspNetCore.Authorization;
@@ -29,9 +30,9 @@ namespace ForumApi.Controllers
 
         [AllowAnonymous]
         [HttpGet()]
-        public async Task<ActionResult> GetPosts([FromRoute] int categoryId)
+        public async Task<ActionResult> GetPosts([FromRoute] int categoryId, [FromQuery] PaginationQuery paginationQuery)
         {
-            var posts = await _postService.GetPosts(categoryId);
+            var posts = await _postService.GetPosts(categoryId, paginationQuery);
             return Ok(posts);
         }
 
@@ -53,17 +54,17 @@ namespace ForumApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("~/v1/authors/{authorId}/posts")]
-        public async Task<ActionResult> GetPostsByAuthor([FromRoute] int authorId)
+        public async Task<ActionResult> GetPostsByAuthor([FromRoute] int authorId, [FromQuery] PaginationQuery paginationQuery)
         {
-            var posts = await _postService.GetPostsByAuthor(authorId);
+            var posts = await _postService.GetPostsByAuthor(authorId, paginationQuery);
             return Ok(posts);
         }
 
         [AllowAnonymous]
         [HttpGet("~/v1/tags/{tagId}/posts")]
-        public async Task<ActionResult> GetPostsByTag([FromRoute] int tagId)
+        public async Task<ActionResult> GetPostsByTag([FromRoute] int tagId, [FromQuery] PaginationQuery paginationQuery)
         {
-            var posts = await _postService.GetPostsByTag(tagId);
+            var posts = await _postService.GetPostsByTag(tagId, paginationQuery);
             return Ok(posts);
         }
         

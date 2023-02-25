@@ -4,6 +4,7 @@ using ForumApi.Middleware;
 using ForumApi.Services.AccountService;
 using ForumApi.Services.CategoryService;
 using ForumApi.Services.CommentService;
+using ForumApi.Services.PaginationService;
 using ForumApi.Services.PostService;
 using ForumApi.Services.TagService;
 using Microsoft.AspNetCore.Identity;
@@ -62,6 +63,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
 
 var app = builder.Build();
 
