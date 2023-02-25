@@ -1,4 +1,5 @@
 ﻿using ForumApi.Models.Comments;
+using ForumApi.Models.Queries;
 using ForumApi.Services.CommentService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,9 +28,9 @@ namespace ForumApi.Controllers
 
         [AllowAnonymous]
         [HttpGet()]
-        public async Task<ActionResult> GetComments([FromRoute] int categoryId, [FromRoute] int postId)
+        public async Task<ActionResult> GetComments([FromRoute] int categoryId, [FromRoute] int postId, [FromQuery] PaginationQuery paginationQuery)
         {
-            var comments = await _commentService.GetComments(categoryId, postId);
+            var comments = await _commentService.GetComments(categoryId, postId, paginationQuery);
             return Ok(comments);
         }
 

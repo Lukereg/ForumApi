@@ -64,6 +64,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
+builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Comment>>();
 
 var app = builder.Build();
 
