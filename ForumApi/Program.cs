@@ -71,6 +71,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
 builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Comment>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
 
 var app = builder.Build();
 
