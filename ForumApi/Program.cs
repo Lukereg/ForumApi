@@ -4,6 +4,7 @@ using ForumApi;
 using ForumApi.Entities;
 using ForumApi.Middleware;
 using ForumApi.Models.Accounts;
+using ForumApi.Models.Categories;
 using ForumApi.Services.AccountService;
 using ForumApi.Services.CategoryService;
 using ForumApi.Services.CommentService;
@@ -72,6 +73,7 @@ builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
 builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Comment>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
+builder.Services.AddScoped<IValidator<AddCategoryDto>, AddCategoryDtoValidator>();
 
 var app = builder.Build();
 
