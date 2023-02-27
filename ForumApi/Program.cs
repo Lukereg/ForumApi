@@ -1,6 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using ForumApi;
 using ForumApi.Entities;
 using ForumApi.Middleware;
+using ForumApi.Models.Accounts;
 using ForumApi.Services.AccountService;
 using ForumApi.Services.CategoryService;
 using ForumApi.Services.CommentService;
@@ -45,6 +48,8 @@ builder.Services.AddAuthentication(option =>
 
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidation();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -65,6 +70,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
 builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Comment>>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 var app = builder.Build();
 
