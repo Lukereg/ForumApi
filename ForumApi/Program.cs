@@ -77,6 +77,7 @@ builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCategoryDto>, AddCategoryDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateCategoryDto>, UpdateCategoryDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCommentDto>, AddCommentDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateCommentDto>, UpdateCommentDtoValidator>();
 
 var app = builder.Build();
 
