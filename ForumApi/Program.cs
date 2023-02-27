@@ -74,6 +74,7 @@ builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Commen
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCategoryDto>, AddCategoryDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateCategoryDto>, UpdateCategoryDtoValidator>();
 
 var app = builder.Build();
 
