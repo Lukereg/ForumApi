@@ -82,6 +82,7 @@ builder.Services.AddScoped<IValidator<AddCommentDto>, AddCommentDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateCommentDto>, UpdateCommentDtoValidator>();
 builder.Services.AddScoped<IValidator<AddPostDto>, AddPostDtoValidator>();
 builder.Services.AddScoped<IValidator<AddTagDto>, AddTagDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateTagDto>, UpdateTagDtoValidator>();
 
 var app = builder.Build();
 
