@@ -10,6 +10,7 @@ namespace ForumApi.Models.Accounts
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .EmailAddress()
+                .MaximumLength(80)
                 .Custom((value, context) =>
                 {
                     var email = _forumDbContext.Users.Any(u => u.Email == value);
@@ -20,6 +21,7 @@ namespace ForumApi.Models.Accounts
 
             RuleFor(x => x.Login)
                 .NotEmpty()
+                .MaximumLength(80)
                 .Custom((value, context) =>
                 {
                     if (value.Contains("@"))
@@ -39,6 +41,16 @@ namespace ForumApi.Models.Accounts
                 .NotEmpty()
                 .Equal(e => e.Password)
                 .WithMessage("The passwords must be the same");
+
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$")
+                .MaximumLength(60);
+
+            RuleFor(x => x.Surname)
+                .NotEmpty()
+                .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$")
+                .MaximumLength(60);
         }
     }
 }

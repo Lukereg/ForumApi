@@ -9,6 +9,7 @@ namespace ForumApi.Models.Categories
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
+                .MaximumLength(200)
                 .Custom((value, context) =>
                 {
                     var category = _forumDbContext.Categories.Any(c => c.Name == value);
