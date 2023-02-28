@@ -5,7 +5,7 @@ namespace ForumApi.Models.Comments
 {
     public class UpdateCommentDtoValidator : AbstractValidator<UpdateCommentDto>
     {
-        public UpdateCommentDtoValidator(ForumDbContext _forumDbContext)
+        public UpdateCommentDtoValidator()
         {
             RuleFor(x => x.Message)
                 .NotEmpty()
