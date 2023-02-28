@@ -6,6 +6,7 @@ using ForumApi.Middleware;
 using ForumApi.Models.Accounts;
 using ForumApi.Models.Categories;
 using ForumApi.Models.Comments;
+using ForumApi.Models.Posts;
 using ForumApi.Services.AccountService;
 using ForumApi.Services.CategoryService;
 using ForumApi.Services.CommentService;
@@ -78,6 +79,7 @@ builder.Services.AddScoped<IValidator<AddCategoryDto>, AddCategoryDtoValidator>(
 builder.Services.AddScoped<IValidator<UpdateCategoryDto>, UpdateCategoryDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCommentDto>, AddCommentDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateCommentDto>, UpdateCommentDtoValidator>();
+builder.Services.AddScoped<IValidator<AddPostDto>, AddPostDtoValidator>();
 
 var app = builder.Build();
 
