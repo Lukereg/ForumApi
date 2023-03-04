@@ -12,11 +12,11 @@ namespace ForumApi.Services.PostService
 {
     public class PostService : IPostService
     {
-        private readonly ForumDbContext _forumDbContext;
+        private readonly IForumDbContext _forumDbContext;
         private readonly IMapper _mapper;
         private readonly IPaginationService<Post> _paginationService;
 
-        public PostService(ForumDbContext forumDbContext, IMapper mapper, IPaginationService<Post> paginationService)
+        public PostService(IForumDbContext forumDbContext, IMapper mapper, IPaginationService<Post> paginationService)
         {
             _forumDbContext = forumDbContext;
             _mapper = mapper;

@@ -74,6 +74,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
 builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Comment>>();
+builder.Services.AddScoped<IForumDbContext, ForumDbContext>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCategoryDto>, AddCategoryDtoValidator>();

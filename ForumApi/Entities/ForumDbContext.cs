@@ -2,9 +2,14 @@
 
 namespace ForumApi.Entities
 {
-    public class ForumDbContext : DbContext
+    public class ForumDbContext : DbContext, IForumDbContext
     {
-        public ForumDbContext(DbContextOptions<ForumDbContext> options) :base(options)
+        public ForumDbContext()
+        {
+
+        }
+
+        public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
         }
 
@@ -131,7 +136,7 @@ namespace ForumApi.Entities
                 .HasColumnName("email")
                 .HasMaxLength(80);
 
-                entity.Property(u => u.Password)          
+                entity.Property(u => u.Password)
                 .HasColumnName("password")
                 .HasColumnType("varchar(255)");
 
