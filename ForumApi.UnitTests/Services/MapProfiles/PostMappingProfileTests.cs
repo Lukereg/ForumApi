@@ -3,6 +3,7 @@ using FluentAssertions;
 using ForumApi.Entities;
 using ForumApi.MapProfiles;
 using ForumApi.Models.Posts;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,14 +26,14 @@ namespace ForumApi.Tests.Services.MapProfiles
         [InlineData("TestTitle", "TestMessage", 2)]
         [InlineData("asdadsdas", "fsdvcxxcv", 5)]
         [InlineData("nffgh", "fghe", 7)]
-        public void AddPostDto_DtoToPost_MapsCorrectly(String title, String message, int AuthorId)
+        public void CreateMap_AddPostDtoToPost_MapsCorrectly(String title, String message, int authorId)
         {
             //arange
             var addPostDto = new AddPostDto
             {
                 Title = title,
                 Message = message,
-                AuthorId = AuthorId
+                AuthorId = authorId
             };
 
             //act
@@ -42,6 +43,34 @@ namespace ForumApi.Tests.Services.MapProfiles
             post.Title.Should().Be(addPostDto.Title);
             post.Message.Should().Be(addPostDto.Message);
             post.AuthorId.Should().Be(addPostDto.AuthorId);
+        }
+
+        [Theory]
+        [InlineData(1, "testTitle", "testMessage", 1, 1, "2015-05-16T05:50:06")]
+        [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
+        public void CreateMap_PostToGetPostDto_MapsCorrectly(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
+        {
+            //arange
+            var post = new Post
+            {
+                Id = id,
+                Title = title,
+                Message = message,
+                AuthorId = authorId,
+                CategoryId = categoryId,
+                CreatedDate = createdDate
+            };
+
+            //act
+            var getPostDto = _mapper.Map<GetPostDto>(post);
+
+            //assert
+            getPostDto.Id.Should().Be(post.Id);
+            getPostDto.Title.Should().Be(post.Title);
+            getPostDto.Message.Should().Be(post.Message);
+            getPostDto.AuthorId.Should().Be(post.AuthorId);
+            getPostDto.CategoryId.Should().Be(post.CategoryId);
+            getPostDto.CreatedDate.Should().Be(post.CreatedDate);
         }
     }
 }
