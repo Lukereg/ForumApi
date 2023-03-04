@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApi", "ForumApi\ForumApi.csproj", "{0E8C7CE3-20E7-4DB0-B909-A669C2608CE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApi.UnitTests", "ForumApi.Tests\ForumApi.UnitTests.csproj", "{10B186C0-EFD0-48EA-B724-DAE111968791}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApi.UnitTests", "ForumApi.UnitTests\ForumApi.UnitTests.csproj", "{10B186C0-EFD0-48EA-B724-DAE111968791}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
