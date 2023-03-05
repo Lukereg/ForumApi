@@ -202,6 +202,47 @@ namespace ForumApi.Tests.Services
             await action.Should().ThrowExactlyAsync<NotFoundException>();
         }
 
+        [Theory]
+        [InlineData(1, "testTitle", "testMessage", 1, 1, "2015-05-16T05:50:06")]
+        [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
+        public async Task GetPostById_CategoryIdDoesNotExist_ThrowsNotFoundException(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
+        {
+            var post = new Post
+            {
+                Id = id,
+                Title = title,
+                Message = message,
+                AuthorId = authorId,
+                CategoryId = categoryId,
+                CreatedDate = createdDate
+            };
+
+            var getPostDto = new GetPostDto
+            {
+                Id = id,
+                Title = title,
+                Message = message,
+                AuthorId = authorId,
+                CategoryId = categoryId,
+                CreatedDate = createdDate
+            };
+
+            var categories = new List<Category>();
+            var mockDbSetCategories = categories.AsQueryable().BuildMockDbSet();
+            _forumDbContextMock.Setup(f => f.Categories).Returns(mockDbSetCategories.Object);
+
+            var posts = new List<Post>();
+            posts.Add(post);
+            var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
+            _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
+
+            //act
+            var action = async () => await _postService.GetPostById(categoryId, id);
+
+            //assert
+            await action.Should().ThrowExactlyAsync<NotFoundException>();
+        }
+
 
 
     }
