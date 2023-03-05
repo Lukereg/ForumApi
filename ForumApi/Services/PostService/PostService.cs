@@ -25,6 +25,10 @@ namespace ForumApi.Services.PostService
 
         public async Task<int> AddPost(int categoryId, AddPostDto addPostDto)
         {
+            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
             var post = _mapper.Map<Post>(addPostDto);
             post.CategoryId = categoryId;
             post.Tags = await MatchTags(addPostDto);
@@ -44,6 +48,10 @@ namespace ForumApi.Services.PostService
 
         public async Task<PagedResultDto<GetPostDto>> GetPosts(int categoryId, PaginationQuery paginationQuery)
         {
+            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
             var posts = _forumDbContext.Posts
                 .Where(post => post.CategoryId == categoryId)
                 .AsNoTracking();
