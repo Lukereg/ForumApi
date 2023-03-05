@@ -20,6 +20,8 @@ using ForumApi.MapProfiles;
 using Xunit.Sdk;
 using Microsoft.Extensions.Hosting;
 using ForumApi.Exceptions;
+using System.ComponentModel;
+using ForumApi.Models.Queries;
 
 namespace ForumApi.Tests.Services
 {
@@ -207,6 +209,7 @@ namespace ForumApi.Tests.Services
         [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
         public async Task GetPostById_CategoryIdDoesNotExist_ThrowsNotFoundException(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
         {
+            //arrange
             var post = new Post
             {
                 Id = id,
@@ -243,7 +246,49 @@ namespace ForumApi.Tests.Services
             await action.Should().ThrowExactlyAsync<NotFoundException>();
         }
 
+        [Fact]
+        public async Task GetPosts_PostsExist_ReturnsPostsCollection()
+        {
+            int categoryId = 1;
 
+            //arrange
+            var posts = new List<Post>
+            {
+                new Post {Id = 1, CategoryId = categoryId, AuthorId = 1, Title = "TestTitle", Message = "TestMessage", CreatedDate = DateTime.Now},
+                new Post {Id = 2, CategoryId = categoryId, AuthorId = 3, Title = "TestttttTitleeee", Message = "TestttttMessageeeee", CreatedDate = DateTime.Now}
+            };
+
+            var postsDto = new List<GetPostDto>
+            {
+                new GetPostDto {Id = 1, CategoryId = categoryId, AuthorId = 1, Title = "TestTitle", Message = "TestMessage", CreatedDate = posts[0].CreatedDate},
+                new GetPostDto {Id = 2, CategoryId = categoryId, AuthorId = 3, Title = "TestttttTitleeee", Message = "TestttttMessageeeee", CreatedDate = posts[1].CreatedDate}
+            };
+
+            var categories = new List<Category>
+            {
+                new Category { Id = categoryId, Name = "Category" }
+            };
+
+
+            var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
+            _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
+
+            var mockDbSetCategories = categories.AsQueryable().BuildMockDbSet();
+            _forumDbContextMock.Setup(f => f.Categories).Returns(mockDbSetCategories.Object);
+
+            _mapperMock.Setup(m => m.Map<List<GetPostDto>>(posts)).Returns(postsDto);
+
+            var paginationQuery = new PaginationQuery
+            {
+                PageNumber = 1, PageSize = posts.Count
+            };
+
+            //act
+            var result = await _postService.GetPosts(categoryId, paginationQuery);
+
+            //assert
+            result.TotalItemsCount.Should().Be(posts.Count);
+        }
 
     }
 }
