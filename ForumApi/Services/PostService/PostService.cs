@@ -61,6 +61,10 @@ namespace ForumApi.Services.PostService
 
         public async Task<PagedResultDto<GetPostDto>> GetPostsByAuthor(int authorId, PaginationQuery paginationQuery)
         {
+            var author = await _forumDbContext.Users.FirstOrDefaultAsync(a => a.Id == authorId);
+            if (author is null)
+                throw new NotFoundException("User not found");
+
             var posts = _forumDbContext.Posts
                 .Where(p => p.AuthorId == authorId)
                 .AsNoTracking();
