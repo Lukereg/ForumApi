@@ -69,6 +69,10 @@ namespace ForumApi.Services.PostService
 
         public async Task<Post> GetPostEntityById(int categoryId, int postId)
         {
+            var category = await _forumDbContext.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+            if (category is null)
+                throw new NotFoundException("Category not found");
+
             var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
             if (post is null || post.CategoryId != categoryId)
                 throw new NotFoundException("Post not found");

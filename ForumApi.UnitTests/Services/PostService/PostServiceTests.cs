@@ -26,14 +26,14 @@ namespace ForumApi.Tests.Services
     public class PostServiceTest
     {
 
-        private readonly Mock<PostService> _postServiceMock;
+        private readonly PostService _postService;
         private readonly Mock<IForumDbContext> _forumDbContextMock = new();
         private readonly Mock<IPaginationService<Post>> _paginationServiceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
 
         public PostServiceTest()
         {
-            _postServiceMock = new Mock<PostService>(_forumDbContextMock.Object, _mapperMock.Object, _paginationServiceMock.Object);
+            _postService = new PostService(_forumDbContextMock.Object, _mapperMock.Object, _paginationServiceMock.Object);
         }
 
         public static IEnumerable<object[]> Data()
@@ -108,7 +108,7 @@ namespace ForumApi.Tests.Services
             _mapperMock.Setup(m => m.Map<Post>(addPostDto)).Returns(post);
 
             //act
-            var postId = await _postServiceMock.Object.AddPost(categoryId, addPostDto);
+            var postId = await _postService.AddPost(categoryId, addPostDto);
 
             //assert
             _forumDbContextMock.Verify(f => f.Posts.AddAsync(It.IsAny<Post>(), default), Times.Once);
@@ -141,6 +141,18 @@ namespace ForumApi.Tests.Services
                 CreatedDate = createdDate
             };
 
+            var categories = new List<Category>
+            {
+                new Category
+                {
+                    Id = categoryId,
+                    Name = "Category"
+                }
+            };
+
+            var mockDbSetCategories = categories.AsQueryable().BuildMockDbSet();
+            _forumDbContextMock.Setup(f => f.Categories).Returns(mockDbSetCategories.Object);
+
             var posts = new List<Post>();
             posts.Add(post);
             var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
@@ -150,7 +162,7 @@ namespace ForumApi.Tests.Services
             _mapperMock.Setup(m => m.Map<GetPostDto>(post)).Returns(getPostDto);
 
             //act
-            var result = await _postServiceMock.Object.GetPostById(categoryId, id);
+            var result = await _postService.GetPostById(categoryId, id);
 
             //assert
             result.Id.Should().Be(post.Id);
@@ -162,22 +174,34 @@ namespace ForumApi.Tests.Services
         }
 
         [Theory]
-        [InlineData(1, "testTitle", "testMessage", 1, 1, "2015-05-16T05:50:06")]
-        [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
-        public async Task GetPostById_IdDoesNotExist_ThrowsNotFoundException(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
+        [InlineData(1, 2)]
+        [InlineData(5, 4)]
+        public async Task GetPostById_IdDoesNotExist_ThrowsNotFoundException(int categoryId, int id)
         {
             //arrange
+            var categories = new List<Category>
+            {
+                new Category
+                {
+                    Id = categoryId,
+                    Name = "Category"
+                }
+            };
+
+            var mockDbSetCategories = categories.AsQueryable().BuildMockDbSet();
+            _forumDbContextMock.Setup(f => f.Categories).Returns(mockDbSetCategories.Object);
+
             var posts = new List<Post>();
             var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
-
             _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
 
             //act
-            var action = async () => await _postServiceMock.Object.GetPostById(categoryId, id);
+            var action = async () => await _postService.GetPostById(categoryId, id);
 
             //assert
             await action.Should().ThrowExactlyAsync<NotFoundException>();
         }
+
 
 
     }
