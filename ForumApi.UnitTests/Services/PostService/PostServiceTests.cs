@@ -17,20 +17,22 @@ using Moq.EntityFrameworkCore;
 using MockQueryable.Moq;
 using System.Reflection;
 using ForumApi.MapProfiles;
+using Xunit.Sdk;
+using Microsoft.Extensions.Hosting;
 
 namespace ForumApi.Tests.Services
 {
     public class PostServiceTest
     {
 
-        private readonly PostService _postService;
-        private readonly Mock<IForumDbContext> _forumDbContext = new();
+        private readonly Mock<PostService> _postServiceMock;
+        private readonly Mock<IForumDbContext> _forumDbContextMock = new();
         private readonly Mock<IPaginationService<Post>> _paginationServiceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
 
         public PostServiceTest()
         {
-            _postService = new PostService(_forumDbContext.Object, _mapperMock.Object, _paginationServiceMock.Object);
+            _postServiceMock = new Mock<PostService>(_forumDbContextMock.Object, _mapperMock.Object, _paginationServiceMock.Object);
         }
 
         public static IEnumerable<object[]> Data()
@@ -91,25 +93,71 @@ namespace ForumApi.Tests.Services
             var posts = new List<Post>();
 
             var mockDbSetTags = tags.AsQueryable().BuildMockDbSet();
-            _forumDbContext.Setup(f => f.Tags).Returns(mockDbSetTags.Object);
+            _forumDbContextMock.Setup(f => f.Tags).Returns(mockDbSetTags.Object);
 
             var mockDbSetUsers = users.AsQueryable().BuildMockDbSet();
-            _forumDbContext.Setup(f => f.Users).Returns(mockDbSetUsers.Object);
+            _forumDbContextMock.Setup(f => f.Users).Returns(mockDbSetUsers.Object);
 
             var mockDbSetCategories = categories.AsQueryable().BuildMockDbSet();
-            _forumDbContext.Setup(f => f.Categories).Returns(mockDbSetCategories.Object);
+            _forumDbContextMock.Setup(f => f.Categories).Returns(mockDbSetCategories.Object);
 
             var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
-            _forumDbContext.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
+            _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
 
             _mapperMock.Setup(m => m.Map<Post>(addPostDto)).Returns(post);
 
             //act
-            var postId = await _postService.AddPost(categoryId, addPostDto);
+            var postId = await _postServiceMock.Object.AddPost(categoryId, addPostDto);
 
             //assert
-            _forumDbContext.Verify(f => f.Posts.AddAsync(It.IsAny<Post>(), default), Times.Once);
-            _forumDbContext.Verify(f => f.SaveChangesAsync(default), Times.Once);
-        }      
+            _forumDbContextMock.Verify(f => f.Posts.AddAsync(It.IsAny<Post>(), default), Times.Once);
+            _forumDbContextMock.Verify(f => f.SaveChangesAsync(default), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(1, "testTitle", "testMessage", 1, 1, "2015-05-16T05:50:06")]
+        [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
+        public async Task GetPostById_IdExist_ReturnGetPostDto(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
+        {
+            //arange
+            var post = new Post
+            {
+                Id = id,
+                Title = title,
+                Message = message,
+                AuthorId = authorId,
+                CategoryId = categoryId,
+                CreatedDate = createdDate
+            };
+
+            var getPostDto = new GetPostDto
+            {
+                Id = id,
+                Title = title,
+                Message = message,
+                AuthorId = authorId,
+                CategoryId = categoryId,
+                CreatedDate = createdDate
+            };
+
+            var posts = new List<Post>();
+            posts.Add(post);
+            var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
+
+            _mapperMock.Setup(m => m.Map<GetPostDto>(post)).Returns(getPostDto);
+            _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
+
+            //act
+            var result = await _postServiceMock.Object.GetPostById(categoryId, id);
+
+            //assert
+            result.Id.Should().Be(post.Id);
+            result.CategoryId.Should().Be(post.CategoryId);
+            result.CreatedDate.Should().Be(post.CreatedDate);
+            result.Message.Should().Be(post.Message);
+            result.Title.Should().Be(post.Title);
+            result.AuthorId.Should().Be(post.AuthorId);
+        }
+        
     }
 }
