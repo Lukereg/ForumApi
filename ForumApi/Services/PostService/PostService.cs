@@ -53,6 +53,7 @@ namespace ForumApi.Services.PostService
                 throw new NotFoundException("Category not found");
 
             var posts = _forumDbContext.Posts
+                .Include(p => p.Tags)
                 .Where(post => post.CategoryId == categoryId)
                 .AsNoTracking();
 
@@ -66,6 +67,7 @@ namespace ForumApi.Services.PostService
                 throw new NotFoundException("User not found");
 
             var posts = _forumDbContext.Posts
+                .Include(p => p.Tags)
                 .Where(p => p.AuthorId == authorId)
                 .AsNoTracking();
 
@@ -85,7 +87,9 @@ namespace ForumApi.Services.PostService
             if (category is null)
                 throw new NotFoundException("Category not found");
 
-            var post = await _forumDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            var post = await _forumDbContext.Posts
+                .Include(p => p.Tags)
+                .FirstOrDefaultAsync(p => p.Id == postId);
             if (post is null || post.CategoryId != categoryId)
                 throw new NotFoundException("Post not found");
 
@@ -101,7 +105,9 @@ namespace ForumApi.Services.PostService
             if (tag is null)
                 throw new NotFoundException("Tag not found");
 
-            var posts = _forumDbContext.Posts.Where(p => p.Tags.Contains(tag))
+            var posts = _forumDbContext.Posts
+                .Include(p => p.Tags)
+                .Where(p => p.Tags.Contains(tag))
                 .AsNoTracking();
 
             return await SortAndPaginate(posts, paginationQuery);

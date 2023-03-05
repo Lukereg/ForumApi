@@ -9,7 +9,8 @@ namespace ForumApi.MapProfiles
         public PostMappingProfile()
         {
             CreateMap<AddPostDto, Post>();
-            CreateMap<Post, GetPostDto>();
+            CreateMap<Post, GetPostDto>()
+                .ForMember(dest => dest.TagsDtos, opt => opt.MapFrom(src => src.Tags));
         }
     }
 }

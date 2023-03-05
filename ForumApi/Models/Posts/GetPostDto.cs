@@ -1,4 +1,5 @@
 ﻿using ForumApi.Entities;
+using ForumApi.Models.Tags;
 
 namespace ForumApi.Models.Posts
 {
@@ -10,5 +11,6 @@ namespace ForumApi.Models.Posts
         public DateTime CreatedDate { get; set; }
         public int AuthorId { get; set; }
         public int CategoryId { get; set; }
+        public List<GetTagDto> TagsDtos { get; set; } = null!;
     }
 }

@@ -249,9 +249,9 @@ namespace ForumApi.Tests.Services
         [Fact]
         public async Task GetPosts_PostsExist_ReturnsPostsCollection()
         {
+            //arrange
             int categoryId = 1;
 
-            //arrange
             var posts = new List<Post>
             {
                 new Post {Id = 1, CategoryId = categoryId, AuthorId = 1, Title = "TestTitle", Message = "TestMessage", CreatedDate = DateTime.Now},
