@@ -28,7 +28,7 @@ namespace ForumApi.Tests.Services.MapProfiles
         [InlineData("nffgh", "fghe", 7)]
         public void CreateMap_AddPostDtoToPost_MapsCorrectly(String title, String message, int authorId)
         {
-            //arange
+            //arrange
             var addPostDto = new AddPostDto
             {
                 Title = title,
@@ -50,7 +50,7 @@ namespace ForumApi.Tests.Services.MapProfiles
         [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
         public void CreateMap_PostToGetPostDto_MapsCorrectly(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
         {
-            //arange
+            //arrange
             var post = new Post
             {
                 Id = id,

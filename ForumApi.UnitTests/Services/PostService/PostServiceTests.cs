@@ -19,6 +19,7 @@ using System.Reflection;
 using ForumApi.MapProfiles;
 using Xunit.Sdk;
 using Microsoft.Extensions.Hosting;
+using ForumApi.Exceptions;
 
 namespace ForumApi.Tests.Services
 {
@@ -45,7 +46,7 @@ namespace ForumApi.Tests.Services
         [MemberData(nameof(Data))]
         public async Task AddPost_ForValidData_InvokesSaveChangesAsyncAndAddAsync(string title, string message, int authorId, List<int> tagsIds, int categoryId)
         {
-            //arange
+            //arrange
             var addPostDto = new AddPostDto
             {
                 Title = title,
@@ -117,9 +118,9 @@ namespace ForumApi.Tests.Services
         [Theory]
         [InlineData(1, "testTitle", "testMessage", 1, 1, "2015-05-16T05:50:06")]
         [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
-        public async Task GetPostById_IdExist_ReturnGetPostDto(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
+        public async Task GetPostById_IdExists_ReturnGetPostDto(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
         {
-            //arange
+            //arrange
             var post = new Post
             {
                 Id = id,
@@ -144,8 +145,9 @@ namespace ForumApi.Tests.Services
             posts.Add(post);
             var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
 
-            _mapperMock.Setup(m => m.Map<GetPostDto>(post)).Returns(getPostDto);
             _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
+
+            _mapperMock.Setup(m => m.Map<GetPostDto>(post)).Returns(getPostDto);
 
             //act
             var result = await _postServiceMock.Object.GetPostById(categoryId, id);
@@ -158,6 +160,25 @@ namespace ForumApi.Tests.Services
             result.Title.Should().Be(post.Title);
             result.AuthorId.Should().Be(post.AuthorId);
         }
-        
+
+        [Theory]
+        [InlineData(1, "testTitle", "testMessage", 1, 1, "2015-05-16T05:50:06")]
+        [InlineData(5, "asdcx", "xadfsdfg", 7, 15, "2022-08-18T05:50:04")]
+        public async Task GetPostById_IdDoesNotExist_ThrowsNotFoundException(int id, String title, string message, int authorId, int categoryId, DateTime createdDate)
+        {
+            //arrange
+            var posts = new List<Post>();
+            var mockDbSetPosts = posts.AsQueryable().BuildMockDbSet();
+
+            _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
+
+            //act
+            var action = async () => await _postServiceMock.Object.GetPostById(categoryId, id);
+
+            //assert
+            await action.Should().ThrowExactlyAsync<NotFoundException>();
+        }
+
+
     }
 }
