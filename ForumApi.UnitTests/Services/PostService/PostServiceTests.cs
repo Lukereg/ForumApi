@@ -22,6 +22,8 @@ using Microsoft.Extensions.Hosting;
 using ForumApi.Exceptions;
 using System.ComponentModel;
 using ForumApi.Models.Queries;
+using ForumApi.Services.UserContextService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ForumApi.Tests.Services
 {
@@ -32,16 +34,19 @@ namespace ForumApi.Tests.Services
         private readonly Mock<IForumDbContext> _forumDbContextMock = new();
         private readonly Mock<IPaginationService<Post>> _paginationServiceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
+        private readonly Mock<IAuthorizationService> _authorizationServiceMock = new();
+        private readonly Mock<IUserContextService> _userContextServiceMock = new();
 
         public PostServiceTest()
         {
-            _postService = new PostService(_forumDbContextMock.Object, _mapperMock.Object, _paginationServiceMock.Object);
+            _postService = new PostService(_forumDbContextMock.Object, _mapperMock.Object, _paginationServiceMock.Object, 
+                _authorizationServiceMock.Object, _userContextServiceMock.Object);
         }
 
         public static IEnumerable<object[]> Data()
         {
-            yield return new object[] { "testtitle", "testmessage", 1, new List<int> { 1, 2 }, 1 };
-            yield return new object[] { "saddsada", "cxvxcxvc", 1, new List<int> { 3 }, 1 };
+            yield return new object[] { "testtitle", "testmessage", 2, new List<int> { 1, 2 }, 3 };
+            yield return new object[] { "saddsada", "cxvxcxvc", 3, new List<int> { 3 }, 1 };
         }
 
         [Theory]
@@ -53,7 +58,6 @@ namespace ForumApi.Tests.Services
             {
                 Title = title,
                 Message = message,
-                AuthorId = authorId,
                 TagsIds = tagsIds
             };
 
@@ -68,7 +72,7 @@ namespace ForumApi.Tests.Services
             {
                 new User
                 {
-                    Id = 1,
+                    Id = authorId,
                     Name = "Testname",
                     Surname = "Testsurname",
                     Email = "email@gmail.com",
@@ -80,7 +84,7 @@ namespace ForumApi.Tests.Services
             {
                 new Category
                 {
-                    Id = 1,
+                    Id = categoryId,
                     Name = "Category"
                 }
             };
@@ -89,10 +93,12 @@ namespace ForumApi.Tests.Services
             {
                 Title = addPostDto.Title,
                 Message = addPostDto.Message,
-                AuthorId = addPostDto.AuthorId,
-                CategoryId = categoryId
+                CategoryId = categoryId,
+                AuthorId = authorId
+               
             };
 
+          
             var posts = new List<Post>();
 
             var mockDbSetTags = tags.AsQueryable().BuildMockDbSet();
@@ -108,6 +114,7 @@ namespace ForumApi.Tests.Services
             _forumDbContextMock.Setup(f => f.Posts).Returns(mockDbSetPosts.Object);
 
             _mapperMock.Setup(m => m.Map<Post>(addPostDto)).Returns(post);
+            _userContextServiceMock.Setup(u => u.GetUserId()).Returns(authorId);
 
             //act
             var postId = await _postService.AddPost(categoryId, addPostDto);

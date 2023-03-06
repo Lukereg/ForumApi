@@ -32,8 +32,7 @@ namespace ForumApi.Tests.Services.MapProfiles
             var addPostDto = new AddPostDto
             {
                 Title = title,
-                Message = message,
-                AuthorId = authorId
+                Message = message
             };
 
             //act
@@ -42,7 +41,6 @@ namespace ForumApi.Tests.Services.MapProfiles
             //assert
             post.Title.Should().Be(addPostDto.Title);
             post.Message.Should().Be(addPostDto.Message);
-            post.AuthorId.Should().Be(addPostDto.AuthorId);
         }
 
         [Theory]

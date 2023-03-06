@@ -11,6 +11,7 @@ namespace ForumApi.Controllers
 {
     [Route("v1/categories/{categoryId}/posts")]
     [ApiController]
+    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -20,7 +21,6 @@ namespace ForumApi.Controllers
             _postService = postService;
         }
 
-        [AllowAnonymous]
         [HttpPost()]
         public async Task<ActionResult> AddPost([FromRoute] int categoryId, [FromBody] AddPostDto addPostDto)
         {
@@ -44,7 +44,6 @@ namespace ForumApi.Controllers
             return Ok(post);
         }
 
-        [AllowAnonymous]
         [HttpDelete("{postId}")]
         public async Task<ActionResult> DeletePost([FromRoute] int categoryId, [FromRoute] int postId)
         {

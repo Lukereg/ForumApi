@@ -1,5 +1,6 @@
 ﻿
 using ForumApi.Exceptions;
+using System.Reflection.Metadata;
 
 namespace ForumApi.Middleware
 {
@@ -27,6 +28,16 @@ namespace ForumApi.Middleware
             {
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(badRequestException.Message);
+            }
+            catch (ForbiddenException forbiddenException)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(forbiddenException.Message);
+            }
+            catch (UnauthorizedException unauthorizedException)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync(unauthorizedException.Message);
             }
             catch (Exception ex)
             {

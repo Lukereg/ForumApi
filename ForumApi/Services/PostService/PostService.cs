@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
+using ForumApi.Authorization;
 using ForumApi.Entities;
 using ForumApi.Exceptions;
 using ForumApi.Models.Pagination;
 using ForumApi.Models.Posts;
 using ForumApi.Models.Queries;
 using ForumApi.Services.PaginationService;
+using ForumApi.Services.UserContextService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace ForumApi.Services.PostService
 {
@@ -15,12 +19,17 @@ namespace ForumApi.Services.PostService
         private readonly IForumDbContext _forumDbContext;
         private readonly IMapper _mapper;
         private readonly IPaginationService<Post> _paginationService;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
 
-        public PostService(IForumDbContext forumDbContext, IMapper mapper, IPaginationService<Post> paginationService)
+        public PostService(IForumDbContext forumDbContext, IMapper mapper, IPaginationService<Post> paginationService,
+            IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _forumDbContext = forumDbContext;
             _mapper = mapper;
-            _paginationService = paginationService; 
+            _paginationService = paginationService;
+            _authorizationService = authorizationService;
+            _userContextService = userContextService;
         }
 
         public async Task<int> AddPost(int categoryId, AddPostDto addPostDto)
@@ -31,6 +40,7 @@ namespace ForumApi.Services.PostService
 
             var post = _mapper.Map<Post>(addPostDto);
             post.CategoryId = categoryId;
+            post.AuthorId = _userContextService.GetUserId();
             post.Tags = await MatchTags(addPostDto);
 
             await _forumDbContext.Posts.AddAsync(post);
@@ -77,6 +87,13 @@ namespace ForumApi.Services.PostService
         public async Task DeletePost(int categoryId, int postId)
         {
             var post = await GetPostEntityById(categoryId, postId);
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.GetUser(), post,
+                new ResourceOperationRequirement(ResourceOperation.Update));
+
+            if (!authorizationResult.Succeeded)
+                throw new ForbiddenException();
+
             _forumDbContext.Posts.Remove(post);
             await _forumDbContext.SaveChangesAsync();
         }
@@ -89,7 +106,9 @@ namespace ForumApi.Services.PostService
 
             var post = await _forumDbContext.Posts
                 .Include(p => p.Tags)
+                .Include(p => p.Author)
                 .FirstOrDefaultAsync(p => p.Id == postId);
+
             if (post is null || post.CategoryId != categoryId)
                 throw new NotFoundException("Post not found");
 
