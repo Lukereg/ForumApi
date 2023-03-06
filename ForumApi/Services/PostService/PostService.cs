@@ -89,7 +89,7 @@ namespace ForumApi.Services.PostService
             var post = await GetPostEntityById(categoryId, postId);
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.GetUser(), post,
-                new ResourceOperationRequirement(ResourceOperation.Update));
+                new ResourceOperationRequirement(ResourceOperation.Delete));
 
             if (!authorizationResult.Succeeded)
                 throw new ForbiddenException();

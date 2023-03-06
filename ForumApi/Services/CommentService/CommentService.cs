@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ForumApi.Authorization;
 using ForumApi.Entities;
 using ForumApi.Exceptions;
 using ForumApi.Models.Comments;
@@ -7,6 +8,8 @@ using ForumApi.Models.Posts;
 using ForumApi.Models.Queries;
 using ForumApi.Services.PaginationService;
 using ForumApi.Services.PostService;
+using ForumApi.Services.UserContextService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
@@ -19,13 +22,18 @@ namespace ForumApi.Services.CommentService
         private readonly IMapper _mapper;
         private readonly IPostService _postService;
         private readonly IPaginationService<Comment> _paginationService;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
 
-        public CommentService(ForumDbContext forumDbContext, IMapper mapper, IPostService postService, IPaginationService<Comment> paginationService)
+        public CommentService(ForumDbContext forumDbContext, IMapper mapper, IPostService postService, 
+            IPaginationService<Comment> paginationService, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _forumDbContext = forumDbContext;
             _mapper = mapper;
             _postService = postService; 
             _paginationService = paginationService;
+            _authorizationService = authorizationService;
+            _userContextService = userContextService;   
         }
 
         public async Task<int> AddComment(int categoryId, int postId, AddCommentDto addCommentDto)
@@ -34,6 +42,7 @@ namespace ForumApi.Services.CommentService
 
             var comment = _mapper.Map<Comment>(addCommentDto);
             comment.PostId = post.Id;
+            comment.AuthorId = _userContextService.GetUserId();
 
             await _forumDbContext.Comments.AddAsync(comment);
             await _forumDbContext.SaveChangesAsync();
@@ -47,7 +56,13 @@ namespace ForumApi.Services.CommentService
             var comment = await _forumDbContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
             if (comment is null || comment.PostId != post.Id)
                 throw new NotFoundException("Comment not found");
-            
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.GetUser(), comment,
+                new ResourceOperationRequirement(ResourceOperation.Delete));
+
+            if (!authorizationResult.Succeeded)
+                throw new ForbiddenException();
+
             _forumDbContext.Comments.Remove(comment);
             await _forumDbContext.SaveChangesAsync();
         }
@@ -75,6 +90,12 @@ namespace ForumApi.Services.CommentService
             var comment = await _forumDbContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
             if (comment is null || comment.PostId != post.Id)
                 throw new NotFoundException("Comment not found");
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.GetUser(), comment,
+                new ResourceOperationRequirement(ResourceOperation.Update));
+
+            if (!authorizationResult.Succeeded)
+                throw new ForbiddenException();
 
             comment.Message = updateCommentDto.Message;
             comment.UpdatedDate = DateTime.Now;

@@ -9,6 +9,7 @@ namespace ForumApi.Controllers
 {
     [Route("v1/categories/{categoryId}/posts/{postId}/comments")]
     [ApiController]
+    [Authorize]
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
@@ -18,7 +19,7 @@ namespace ForumApi.Controllers
             _commentService = commentService;
         }
 
-        [AllowAnonymous]
+        
         [HttpPost()]
         public async Task<ActionResult> AddComment([FromRoute] int categoryId, [FromRoute] int postId, [FromBody] AddCommentDto addCommentDto)
         {
@@ -34,7 +35,6 @@ namespace ForumApi.Controllers
             return Ok(comments);
         }
 
-        [AllowAnonymous]
         [HttpPut("{commentId}")]
         public async Task<ActionResult> UpdateComment([FromRoute] int categoryId, [FromRoute] int postId, [FromRoute] int commentId, [FromBody] UpdateCommentDto updateCommentDto)
         {
@@ -42,7 +42,6 @@ namespace ForumApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
         [HttpDelete("{commentId}")]
         public async Task<ActionResult> DeleteComment([FromRoute] int categoryId, [FromRoute] int postId, [FromRoute] int commentId)
         {
