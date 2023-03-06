@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using ForumApi.Entities;
+using ForumApi.Models.Posts;
 
-namespace ForumApi.Models.Posts
+namespace ForumApi.Validators
 {
     public class AddPostDtoValidator : AbstractValidator<AddPostDto>
     {

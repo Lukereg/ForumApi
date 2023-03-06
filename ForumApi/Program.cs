@@ -16,6 +16,7 @@ using ForumApi.Services.PaginationService;
 using ForumApi.Services.PostService;
 using ForumApi.Services.TagService;
 using ForumApi.Services.UserContextService;
+using ForumApi.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

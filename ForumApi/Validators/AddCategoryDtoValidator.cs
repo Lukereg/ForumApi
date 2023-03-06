@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using ForumApi.Entities;
+using ForumApi.Models.Categories;
 
-namespace ForumApi.Models.Categories
+namespace ForumApi.Validators
 {
     public class AddCategoryDtoValidator : AbstractValidator<AddCategoryDto>
     {

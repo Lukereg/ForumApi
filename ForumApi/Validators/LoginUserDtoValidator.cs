@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 using ForumApi.Entities;
+using ForumApi.Models.Accounts;
 using Microsoft.AspNetCore.Identity;
 
-namespace ForumApi.Models.Accounts
+namespace ForumApi.Validators
 {
     public class LoginUserDtoValidator : AbstractValidator<LoginUserDto>
     {

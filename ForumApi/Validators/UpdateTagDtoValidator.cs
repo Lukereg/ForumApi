@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using ForumApi.Entities;
+using ForumApi.Models.Tags;
 
-namespace ForumApi.Models.Tags
+namespace ForumApi.Validators
 {
     public class UpdateTagDtoValidator : AbstractValidator<UpdateTagDto>
     {

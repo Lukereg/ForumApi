@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using ForumApi.Entities;
+using ForumApi.Models.Comments;
 
-namespace ForumApi.Models.Comments
+namespace ForumApi.Validators
 {
     public class AddCommentDtoValidator : AbstractValidator<AddCommentDto>
     {
@@ -10,7 +11,7 @@ namespace ForumApi.Models.Comments
             RuleFor(x => x.Message)
                 .NotEmpty()
                 .MaximumLength(10000000);
-                
+
         }
     }
 }
