@@ -8,6 +8,7 @@ namespace ForumApi.Controllers
 {
     [Route("v1/tags")]
     [ApiController]
+    [Authorize(Roles = "Admin,Moderator")]
     public class TagController : ControllerBase
     {
         private readonly ITagService _tagService;
@@ -17,7 +18,6 @@ namespace ForumApi.Controllers
             _tagService = tagService;
         }
 
-        [AllowAnonymous]
         [HttpPost()]
         public async Task<ActionResult> AddTag([FromBody] AddTagDto addTagDto)
         {
@@ -41,7 +41,6 @@ namespace ForumApi.Controllers
             return Ok(tag);
         }
 
-        [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateTag([FromBody] UpdateTagDto updateTagDto, [FromRoute] int id)
         {
@@ -49,7 +48,6 @@ namespace ForumApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTag([FromRoute] int id)
         {

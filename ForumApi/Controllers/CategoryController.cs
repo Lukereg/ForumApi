@@ -8,6 +8,7 @@ namespace ForumApi.Controllers
 {
     [Route("v1/categories")]
     [ApiController]
+    [Authorize(Roles = "Admin,Moderator")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -17,7 +18,6 @@ namespace ForumApi.Controllers
             _categoryService = categoryService;
         }
 
-        [AllowAnonymous]
         [HttpPost()]
         public async Task<ActionResult> AddCategory([FromBody] AddCategoryDto addCategoryDto)
         {
@@ -41,7 +41,6 @@ namespace ForumApi.Controllers
             return Ok(categories);
         }
 
-        [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateCategory([FromBody] UpdateCategoryDto updateCategoryDto, [FromRoute] int id)
         {
@@ -49,7 +48,6 @@ namespace ForumApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCategory([FromRoute] int id)
         {
