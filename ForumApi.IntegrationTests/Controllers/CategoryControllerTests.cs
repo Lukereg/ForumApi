@@ -14,31 +14,13 @@ using System.Text;
 
 namespace ForumApi.IntegrationTests.Controllers
 {
-    public class CategoryControllerTests :IClassFixture<WebApplicationFactory<Program>>
+    public class CategoryControllerTests :IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _httpClient;
 
-        public CategoryControllerTests(WebApplicationFactory<Program> factory)
+        public CategoryControllerTests(CustomWebApplicationFactory<Program> factory)
         {
-            _httpClient = factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureServices(services =>
-                    {
-                        var dbContext = services
-                            .SingleOrDefault(dbContext => dbContext.ServiceType == typeof(DbContextOptions<ForumDbContext>));
-                        
-                        if (dbContext is not null)
-                            services.Remove(dbContext);
-
-                        services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
-
-                        services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
-
-                        services.AddDbContext<ForumDbContext>(options => options.UseInMemoryDatabase("ForumDb"));
-                    });
-                })
-                .CreateClient();
+            _httpClient = factory.CreateClient();
         }
 
         [Fact]
@@ -61,8 +43,7 @@ namespace ForumApi.IntegrationTests.Controllers
                 Name = "TestCategory"
             };
 
-            var json = JsonConvert.SerializeObject(model);
-            var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+            var httpContent = model.ToJsonHttpContent();
 
             //act
             var response = await _httpClient.PostAsync("/v1/categories", httpContent);
@@ -83,8 +64,7 @@ namespace ForumApi.IntegrationTests.Controllers
                 Name = randomString
             };
 
-            var json = JsonConvert.SerializeObject(model);
-            var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+            var httpContent = model.ToJsonHttpContent();
 
             //act
             var response = await _httpClient.PostAsync("/v1/categories", httpContent);
