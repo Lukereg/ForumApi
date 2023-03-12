@@ -17,10 +17,12 @@ namespace ForumApi.IntegrationTests.Controllers
     public class CategoryControllerTests :IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _httpClient;
+        private readonly CustomWebApplicationFactory<Program> _factory;
 
         public CategoryControllerTests(CustomWebApplicationFactory<Program> factory)
         {
             _httpClient = factory.CreateClient();
+            _factory = factory;
         }
 
         [Fact]
@@ -83,6 +85,26 @@ namespace ForumApi.IntegrationTests.Controllers
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task Delete_ForExistingCategory_ReturnsNotFound()
+        {
+            //arrange
+            var category = new Category()
+            {
+                Id = 1,
+                Name = "Automotive"
+            };
+
+            //seed
+            SeedCategory(category);
+
+            //act
+            var response = await _httpClient.DeleteAsync("/v1/categories/" + category.Id);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
         public String RandomString(int length)
         {
             var random = new Random();
@@ -90,6 +112,16 @@ namespace ForumApi.IntegrationTests.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new String(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private void SeedCategory(Category category)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _forumDbContext = scope.ServiceProvider.GetService<ForumDbContext>();
+
+            _forumDbContext.Categories.Add(category);
+            _forumDbContext.SaveChanges();
         }
     }
 }
