@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
+using System;
+using System.Drawing.Text;
+using System.Security.Policy;
 using System.Text;
 
 namespace ForumApi.IntegrationTests.Controllers
@@ -67,6 +70,36 @@ namespace ForumApi.IntegrationTests.Controllers
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
             response.Headers.Location.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task AddCategory_WithInvalidModel_ReturnsBadRequest()
+        {
+            //arrange
+            var randomString = RandomString(201);
+
+            var model = new AddCategoryDto()
+            {
+                Name = randomString
+            };
+
+            var json = JsonConvert.SerializeObject(model);
+            var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            //act
+            var response = await _httpClient.PostAsync("/v1/categories", httpContent);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        public String RandomString(int length)
+        {
+            var random = new Random();
+
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new String(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
