@@ -37,6 +37,35 @@ namespace ForumApi.IntegrationTests.Controllers
         }
 
         [Fact]
+        public async Task GetCategoryById_ForExistingCategory_ReturnsOkResult()
+        {
+            //arrange
+            var category = new Category()
+            {
+                Name = "Automotive"
+            };
+
+            //seed
+            await SeedCategory(category);
+
+            //act
+            var response = await _httpClient.GetAsync("/v1/categories/" + category.Id);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetCategoryById_ForNonExistingCategory_ReturnsNotFound()
+        {
+            //act
+            var response = await _httpClient.GetAsync("/v1/categories/" + 9999);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task AddCategory_WithValidModel_ReturnsCreatedStatus()
         {
             //arrange
@@ -86,17 +115,16 @@ namespace ForumApi.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Delete_ForExistingCategory_ReturnsNotFound()
+        public async Task DeleteCategory_ForExistingCategory_ReturnsNoContent()
         {
             //arrange
             var category = new Category()
             {
-                Id = 1,
                 Name = "Automotive"
             };
 
             //seed
-            SeedCategory(category);
+            await SeedCategory(category);
 
             //act
             var response = await _httpClient.DeleteAsync("/v1/categories/" + category.Id);
@@ -111,7 +139,6 @@ namespace ForumApi.IntegrationTests.Controllers
             //arrange
             var category = new Category()
             {
-                Id = 1,
                 Name = "Automotive"
             };
 
@@ -123,7 +150,7 @@ namespace ForumApi.IntegrationTests.Controllers
             var httpContent = model.ToJsonHttpContent();
 
             //seed
-            SeedCategory(category);
+            await SeedCategory(category);
 
             //act
             var response = await _httpClient.PutAsync("/v1/categories/" + category.Id, httpContent);
@@ -141,14 +168,14 @@ namespace ForumApi.IntegrationTests.Controllers
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        private void SeedCategory(Category category)
+        private async Task SeedCategory(Category category)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
             var _forumDbContext = scope.ServiceProvider.GetService<ForumDbContext>();
 
-            _forumDbContext.Categories.Add(category);
-            _forumDbContext.SaveChanges();
+            await _forumDbContext.Categories.AddAsync(category);
+            await _forumDbContext.SaveChangesAsync();
         }
     }
 }
