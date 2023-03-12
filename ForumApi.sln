@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApi", "ForumApi\ForumA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApi.UnitTests", "ForumApi.UnitTests\ForumApi.UnitTests.csproj", "{10B186C0-EFD0-48EA-B724-DAE111968791}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumApi.IntegrationTests", "ForumApi.IntegrationTests\ForumApi.IntegrationTests.csproj", "{F5457A9B-F4DA-4983-96C2-E23A86FE9E19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{10B186C0-EFD0-48EA-B724-DAE111968791}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10B186C0-EFD0-48EA-B724-DAE111968791}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10B186C0-EFD0-48EA-B724-DAE111968791}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5457A9B-F4DA-4983-96C2-E23A86FE9E19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5457A9B-F4DA-4983-96C2-E23A86FE9E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5457A9B-F4DA-4983-96C2-E23A86FE9E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5457A9B-F4DA-4983-96C2-E23A86FE9E19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
