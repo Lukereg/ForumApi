@@ -73,6 +73,16 @@ namespace ForumApi.IntegrationTests.Controllers
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
+        [Fact]
+        public async Task DeleteCategory_ForNonExistingCategory_ReturnsNotFound()
+        {
+            //act
+            var response = await _httpClient.DeleteAsync("/v1/categories/9999");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
         public String RandomString(int length)
         {
             var random = new Random();
