@@ -105,6 +105,33 @@ namespace ForumApi.IntegrationTests.Controllers
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
+        [Fact]
+        public async Task UpdateCategory_ForExistingCategoryAndWithValidModel_ReturnsOkResult()
+        {
+            //arrange
+            var category = new Category()
+            {
+                Id = 1,
+                Name = "Automotive"
+            };
+
+            var model = new UpdateCategoryDto()
+            {
+                Name = "Automotive - cars"
+            };
+
+            var httpContent = model.ToJsonHttpContent();
+
+            //seed
+            SeedCategory(category);
+
+            //act
+            var response = await _httpClient.PutAsync("/v1/categories/" + category.Id, httpContent);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         public String RandomString(int length)
         {
             var random = new Random();
