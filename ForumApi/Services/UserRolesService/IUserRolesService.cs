@@ -2,6 +2,7 @@
 {
     public interface IUserRolesService
     {
-        public Task AddRoleToUser(int idUser, string roleName);
+        public Task AddRoleToUser(int userId, string roleName);
+        public Task RemoveRoleFromUser(int userId, string roleName);
     }
 }

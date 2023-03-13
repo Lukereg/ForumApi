@@ -19,11 +19,18 @@ namespace ForumApi.Controllers
             _userService = userService;
         }
 
-        [HttpPost("{idUser}/roles")]
-        public async Task<ActionResult> AddRoleToUser([FromRoute] int idUser, [FromQuery] string roleName)
+        [HttpPost("{userId}/roles")]
+        public async Task<ActionResult> AddRoleToUser([FromRoute] int userId, [FromQuery] string roleName)
         {
-            await _userService.AddRoleToUser(idUser, roleName);
+            await _userService.AddRoleToUser(userId, roleName);
             return Ok();
+        }
+
+        [HttpDelete("{userId}/roles")]
+        public async Task<ActionResult> RemoveRoleFromUser([FromRoute] int userId, [FromQuery] string roleName)
+        {
+            await _userService.RemoveRoleFromUser(userId, roleName);
+            return NoContent();
         }
     }
 }
