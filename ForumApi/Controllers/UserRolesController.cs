@@ -9,7 +9,7 @@ namespace ForumApi.Controllers
 {
     [Route("v1/users")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class UserRolesController : ControllerBase
     {
         private readonly IUserRolesService _userService;
@@ -20,6 +20,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost("{userId}/roles")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddRoleToUser([FromRoute] int userId, [FromQuery] string roleName)
         {
             await _userService.AddRoleToUser(userId, roleName);
@@ -27,10 +28,18 @@ namespace ForumApi.Controllers
         }
 
         [HttpDelete("{userId}/roles")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> RemoveRoleFromUser([FromRoute] int userId, [FromQuery] string roleName)
         {
             await _userService.RemoveRoleFromUser(userId, roleName);
             return NoContent();
+        }
+
+        [HttpGet("{userId}/roles")]
+        public async Task<ActionResult> GetUserRoles([FromRoute] int userId)
+        {
+            var roles = await _userService.GetUserRoles(userId);
+            return Ok(roles);
         }
     }
 }

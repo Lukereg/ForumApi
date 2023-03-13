@@ -1,5 +1,7 @@
-﻿using ForumApi.Entities;
+﻿using AutoMapper;
+using ForumApi.Entities;
 using ForumApi.Exceptions;
+using ForumApi.Models.Roles;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.UserService
@@ -7,10 +9,12 @@ namespace ForumApi.Services.UserService
     public class UserRolesService : IUserRolesService
     {
         private readonly IForumDbContext _forumDbContext;
+        private readonly IMapper _mapper;
 
-        public UserRolesService(IForumDbContext forumDbContext)
+        public UserRolesService(IForumDbContext forumDbContext, IMapper mapper)
         {
             _forumDbContext = forumDbContext;
+            _mapper = mapper;
         }
 
         public async Task AddRoleToUser(int userId, string roleName)
@@ -25,6 +29,19 @@ namespace ForumApi.Services.UserService
             user.Roles.Add(role);
 
             await _forumDbContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<GetRoleDto>> GetUserRoles(int userId)
+        {
+            var user = await FindUser(userId);
+
+            var roles = new List<Role>();
+
+            foreach (var role in user.Roles)
+                roles.Add(role);
+
+            var result = _mapper.Map<List<GetRoleDto>>(roles);
+            return result;
         }
 
         public async Task RemoveRoleFromUser(int userId, string roleName)
