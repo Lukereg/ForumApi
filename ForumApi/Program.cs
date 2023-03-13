@@ -16,6 +16,7 @@ using ForumApi.Services.PaginationService;
 using ForumApi.Services.PostService;
 using ForumApi.Services.TagService;
 using ForumApi.Services.UserContextService;
+using ForumApi.Services.UserService;
 using ForumApi.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -104,6 +105,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IUserRolesService, UserRolesService>();
 builder.Services.AddScoped<IPaginationService<Post>, PaginationService<Post>>();
 builder.Services.AddScoped<IPaginationService<Comment>, PaginationService<Comment>>();
 builder.Services.AddScoped<IForumDbContext, ForumDbContext>();
@@ -118,6 +120,7 @@ builder.Services.AddScoped<IValidator<AddTagDto>, AddTagDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateTagDto>, UpdateTagDtoValidator>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+
 
 var app = builder.Build();
 
