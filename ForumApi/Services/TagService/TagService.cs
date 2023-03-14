@@ -9,10 +9,10 @@ namespace ForumApi.Services.TagService
 {
     public class TagService : ITagService
     {
-        private readonly ForumDbContext _forumDbContext;
+        private readonly IForumDbContext _forumDbContext;
         private readonly IMapper _mapper;
 
-        public TagService(ForumDbContext forumDbContext, IMapper mapper)
+        public TagService(IForumDbContext forumDbContext, IMapper mapper)
         {
             _forumDbContext = forumDbContext;
             _mapper = mapper;
