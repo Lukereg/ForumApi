@@ -18,14 +18,14 @@ namespace ForumApi.Services.CommentService
 {
     public class CommentService : ICommentService
     {
-        private readonly ForumDbContext _forumDbContext;
+        private readonly IForumDbContext _forumDbContext;
         private readonly IMapper _mapper;
         private readonly IPostService _postService;
         private readonly IPaginationService<Comment> _paginationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContextService;
 
-        public CommentService(ForumDbContext forumDbContext, IMapper mapper, IPostService postService, 
+        public CommentService(IForumDbContext forumDbContext, IMapper mapper, IPostService postService, 
             IPaginationService<Comment> paginationService, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _forumDbContext = forumDbContext;

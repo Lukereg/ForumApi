@@ -8,10 +8,10 @@ namespace ForumApi.Services.CategoryService
 {
     public class CategoryService: ICategoryService
     {
-        private readonly ForumDbContext _forumDbContext;
+        private readonly IForumDbContext _forumDbContext;
         private readonly IMapper _mapper;
         
-        public CategoryService(ForumDbContext forumDbContext, IMapper mapper)
+        public CategoryService(IForumDbContext forumDbContext, IMapper mapper)
         {
             _forumDbContext = forumDbContext;
             _mapper = mapper;

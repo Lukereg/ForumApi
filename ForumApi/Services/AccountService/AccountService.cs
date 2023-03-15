@@ -12,11 +12,11 @@ namespace ForumApi.Services.AccountService
 {
     public class AccountService : IAccountService
     {
-        private readonly ForumDbContext _forumDbContext;
+        private readonly IForumDbContext _forumDbContext;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
 
-        public AccountService(ForumDbContext forumDbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public AccountService(IForumDbContext forumDbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
         {
             _forumDbContext = forumDbContext;
             _passwordHasher = passwordHasher;
