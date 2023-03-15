@@ -2,6 +2,8 @@
 using ForumApi.Entities;
 using ForumApi.IntegrationTests.Helpers;
 using ForumApi.Models.Accounts;
+using ForumApi.Services.AccountService;
+using Moq;
 using System.Runtime.Intrinsics;
 
 namespace ForumApi.IntegrationTests.Controllers
@@ -10,9 +12,17 @@ namespace ForumApi.IntegrationTests.Controllers
     {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
+        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
 
         public AccountControllerTests(CustomWebApplicationFactory<Program> factory) 
         {
+            factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    services.AddSingleton<IAccountService>(_accountServiceMock.Object);
+                });
+            });
             _client = factory.CreateClient();
             _factory = factory;
         }
@@ -77,6 +87,29 @@ namespace ForumApi.IntegrationTests.Controllers
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task LoginUser_ForRegisteredUser_ReturnsOk()
+        {
+            //arrange
+            _accountServiceMock
+                .Setup(e => e.LoginUser(It.IsAny<LoginUserDto>()))
+                .ReturnsAsync("jwt");
+
+            var loginDto = new LoginUserDto() 
+            {
+                LoginOrEmail = "testlogin",
+                Password = "password"
+            };
+
+            var httpContent = loginDto.ToJsonHttpContent();
+
+            //act
+            var response = await _client.PostAsync("/v1/accounts/login", httpContent);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         private async Task SeedRole(Role role)
